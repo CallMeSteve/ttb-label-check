@@ -12,7 +12,8 @@ def _is_producer_line(text: str) -> bool:
     return any(p in low for p in NAME_ADDRESS_PHRASES)
 
 
-def _name_check(item: str, given: str, app: Application, lines: list[Line], missing=Status.MISSING) -> CheckResult:
+def _name_check(item: str, given: str, app: Application, lines: list[Line], missing=Status.MISSING,
+                near=Status.DISAGREE) -> CheckResult:
     # The producer's own name in 'Bottled by ...' is not the brand on the front of the label.
     candidates = [ln for ln in lines if not _is_producer_line(ln.text)]
     span = find_span(given, candidates)
@@ -40,8 +41,12 @@ def _name_check(item: str, given: str, app: Application, lines: list[Line], miss
                 return combine(item, [part], given, ln.text)
     if span.kind == "near":
         lines_used = list(span.lines) + ([big] if big else [])
-        part = Part(Status.DISAGREE, "The name on the label is different from the application." + big_note,
-                    None, lines_used)
+        if near is Status.LOOK:
+            part = Part(Status.LOOK, "Close to the application's name but not the same, which can be the reader "
+                        "missing part of the artwork. Look at the picture." + big_note, None, lines_used)
+        else:
+            part = Part(Status.DISAGREE, "The name on the label is different from the application." + big_note,
+                        None, lines_used)
         return combine(item, [part], given, span.found)
     lines_used = [big] if big else []
     part = Part(missing, f"Couldn't find '{given}' on the label." + big_note, None, lines_used)
@@ -64,4 +69,4 @@ def check_fanciful(app: Application, lines: list[Line]) -> CheckResult | None:
     if not app.fanciful_name.strip():
         return None
     # A fanciful name is often a phrase spread over the artwork, so not finding it is a look, not a verdict.
-    return _name_check("Fanciful name", app.fanciful_name.strip(), app, lines, missing=Status.LOOK)
+    return _name_check("Fanciful name", app.fanciful_name.strip(), app, lines, missing=Status.LOOK, near=Status.LOOK)

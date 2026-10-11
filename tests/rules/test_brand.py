@@ -29,3 +29,11 @@ def test_case_difference_cites_the_rule():
 def test_no_application_brand_is_informational():
     r = check_brand(Application(), mk(["small", "BIG BRAND"], heights={1: 80}))
     assert r.status is Status.INFO and r.label_says == "BIG BRAND"
+
+
+def test_fanciful_name_partly_read_is_look_not_a_red_verdict():
+    # Old Elk COLA on the live settings: the reader saw "ELK STRAIGHT BOURBON WHISKEY" for "9 YEAR STRAIGHT BOURBON WHISKEY".
+    from app.checks.brand import check_fanciful
+    r = check_fanciful(Application(brand_name="OLD ELK", fanciful_name="9 YEAR STRAIGHT BOURBON WHISKEY"),
+                       mk(["OLD ELK", "ELK STRAIGHT BOURBON WHISKEY"]))
+    assert r.status is Status.LOOK, r.reason
