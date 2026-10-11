@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import re
 import statistics
 import sys
 import time
@@ -39,7 +40,8 @@ def single(client: httpx.Client, url: str, repeats: int) -> list[float]:
             r = client.post(f"{url}/check", data=spec["application"], files=files)
             times.append(time.perf_counter() - t)
             if r.status_code != 200:
-                sys.exit(f"{name}: HTTP {r.status_code}")
+                msg = re.findall(r'class="error"[^>]*>([^<]*)<', r.text)
+                sys.exit(f"{name}: HTTP {r.status_code} after {times[-1]:.1f} s: {msg or r.text[:200]}")
     return times
 
 
@@ -70,7 +72,7 @@ def main() -> None:
     a = ap.parse_args()
     url = a.url.rstrip("/")
     with httpx.Client(timeout=300) as client:
-        client.get(f"{url}/healthz")
+        client.get(f"{url}/health")
         times = single(client, url, a.repeats)
         lines = [
             "# Latency",

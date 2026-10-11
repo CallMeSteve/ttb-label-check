@@ -95,7 +95,7 @@ docker build -t label-check .
 docker run -p 8000:8000 label-check
 ```
 
-Then open http://localhost:8000. The container listens on `$PORT` if it is set. `/healthz` reports the text reader's warm-up time.
+Then open http://localhost:8000. The container listens on `$PORT` if it is set. `/health` (also `/healthz`) reports the text reader's warm-up time. A check that runs past `CHECK_TIME_LIMIT` seconds (default 10) returns the "taking too long" message with status 503.
 
 To run the tests:
 

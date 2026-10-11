@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import io
 import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 from types import SimpleNamespace
@@ -22,7 +23,7 @@ BASE = Path(__file__).parent
 MAX_IMAGE_BYTES = 15 * 1024 * 1024
 MAX_IMAGES = 4
 ALLOWED = (".jpg", ".jpeg", ".png", ".webp")
-TIME_LIMIT = 10.0
+TIME_LIMIT = float(os.environ.get("CHECK_TIME_LIMIT", "10"))
 log = logging.getLogger("label-check")
 
 state: dict = {"warm_seconds": None}
@@ -93,8 +94,8 @@ async def check(request: Request):
         values["source"] = "domestic"
     uploads = [v for v in form.getlist("images") if hasattr(v, "filename")]
 
-    def again(error=None, field_error=None):
-        return render(request, "index.html", 400, form=values, error=error, field_error=field_error, example=EXAMPLE)
+    def again(error=None, field_error=None, code=400):
+        return render(request, "index.html", code, form=values, error=error, field_error=field_error, example=EXAMPLE)
 
     if not values["brand_name"]:
         return again(field_error="Type the brand name from the application.")
@@ -105,10 +106,10 @@ async def check(request: Request):
     try:
         outcome = await asyncio.wait_for(run_in_threadpool(check_label, application, files), TIME_LIMIT)
     except TimeoutError:
-        return again(error="This one is taking too long. Try a smaller or sharper picture.")
+        return again(error="This one is taking too long. Try a smaller or sharper picture.", code=503)
     except Exception:
         log.exception("check failed")
-        return again(error="Something went wrong on our side. Your picture wasn't saved. Try again.")
+        return again(error="Something went wrong on our side. Your picture wasn't saved. Try again.", code=500)
     return render(request, "result.html", outcome=outcome, application=application, batch_link=None)
 
 
@@ -214,6 +215,7 @@ def help_page(request: Request):
     return render(request, "help.html")
 
 
+@app.get("/health")
 @app.get("/healthz")
 def healthz(run: int = 0):
     seconds = state["warm_seconds"]

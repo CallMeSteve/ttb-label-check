@@ -5,3 +5,4 @@
 - 2026-10-11 12:00 ET: §14 row 3 done (label generator, 35 rendered cases, end-to-end + degraded tests). 117 tests passing. OCR warm ~1.0-1.6 s per two-image check on this PC (see docs/latency.md later).
 - 2026-10-11 13:30 ET: §14 rows 4-5 done (UI, crops, result/help/print, batch with pool, status polling, CSV export). Dockerfile, ci.yml, image.yml written (Docker itself not runnable on this PC). 129 tests passing incl. no-network test.
 - 2026-10-11 15:30 ET: §14 rows 6-8 done (bold detection cut per amendment; degraded set; latency measured locally p50 1.22 s / p95 1.31 s; browser click-through of single and batch OK; README, APPROACH, NEXT drafted; voice grep clean). 129 tests passing.
+- 2026-10-11 evening: fixed live HTTP 400s (10 s time limit was returning 400 and the abandoned OCR thread kept the lock, so later checks queued and also timed out); now 503, CHECK_TIME_LIMIT env; added /health alias. Cloud Run check takes 7-8 s, over budget.

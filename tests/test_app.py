@@ -105,3 +105,16 @@ def test_batch_without_spreadsheet(client, monkeypatch):
 def test_unknown_batch(client):
     assert client.get("/batch/nope").status_code == 404
     assert "isn't here" in client.get("/batch/nope").text
+
+
+def test_health_alias(client):
+    assert client.get("/health").json()["ok"] is True
+
+
+def test_slow_check_returns_503_with_plain_message(client, monkeypatch):
+    import app.main as m
+
+    monkeypatch.setattr(m, "TIME_LIMIT", 0.05)
+    monkeypatch.setattr(m, "check_label", lambda *a: time.sleep(0.5))
+    r = client.post("/check", data=FORM, files=[pic("old_tom_clean_front.png")])
+    assert r.status_code == 503 and "taking too long" in r.text
