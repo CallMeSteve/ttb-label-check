@@ -60,3 +60,9 @@ def test_no_class_on_label_asks_for_a_look_not_a_disagreement():
 def test_whisky_and_whiskey_are_equal():
     r = check_class(Application(class_type="Straight Bourbon Whisky"), mk(["Straight Bourbon Whiskey"]))
     assert r.status is Status.MATCH
+
+
+def test_class_found_even_when_product_type_picked_is_wrong():
+    r = check_class(Application(product_type="spirits", class_type=EXAMPLE_CLASS),
+                    mk(["OLD TOM", "India Pale Ale", "355 mL"] + ADDRESS))
+    assert r.status is Status.DISAGREE and r.label_says == "India Pale Ale"

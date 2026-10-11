@@ -56,7 +56,11 @@ def check_class(app: Application, all_lines: list[Line]) -> CheckResult:
                     best = (key, span, toks)
     if best is None or best[0][0] * 2 < len(words):
         # No line holds most of the typed words. Report the label's own class if there is one.
-        _, found = detect_class(lines, app.product_type)
+        found = None
+        for kind in (app.product_type, "spirits", "wine", "malt"):  # the picked product type may be wrong
+            _, found = detect_class(lines, kind)
+            if found is not None:
+                break
         if found is not None:
             reason = f"Application says '{given}', label says '{squash_ws(found.text)}'."
             return combine("Class or type", [Part(Status.DISAGREE, reason, RULE, [found])], given, squash_ws(found.text))
