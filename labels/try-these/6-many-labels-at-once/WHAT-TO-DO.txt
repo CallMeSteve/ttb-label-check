@@ -1,4 +1,4 @@
 A zip of 12 labels, with no spreadsheet.
 1. Open Check many labels. Drop batch_sample.zip from this folder on the box, then press Check these labels.
 2. Wait a minute. The page counts up from 0 of 12.
-You should see: "24 pictures, 12 applications". With no spreadsheet only the rule checks run, so labels with a broken rule (wrong proof, missing or reworded warning) are marked "to look at" and the rest say "Nothing to look at". Click Open on any row for the full result.
+You should see: "24 pictures, 12 applications" and then "12 of 12 done. 5 to look at." The 5 are proof_mismatch, warn_title_case, warn_reworded, warn_missing_2 and warn_missing. With no spreadsheet only the rule checks run, so a label with a wrong application value (like abv_app_mismatch) is not flagged here. Click Open on any row for the full result.
