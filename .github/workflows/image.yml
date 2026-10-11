@@ -6,21 +6,58 @@ on:
 permissions:
   contents: read
   packages: write
+env:
+  IMAGE: ghcr.io/callmesteve/ttb-label-check
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
+
+      - name: Build the image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: label-check:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Models load with no network
+        run: |
+          docker run -d --name offline --network none label-check:ci
+          for i in $(seq 1 60); do
+            if docker exec offline python -c "import json,urllib.request as u; d=json.load(u.urlopen('http://127.0.0.1:8000/healthz')); assert d['ok']" 2>/dev/null; then
+              echo "healthz ok"; exit 0
+            fi
+            sleep 2
+          done
+          docker logs offline
+          exit 1
+
+      - name: One real check through the container
+        run: |
+          docker run -d --name app -p 8000:8000 label-check:ci
+          for i in $(seq 1 60); do curl -sf localhost:8000/healthz && break; sleep 2; done
+          curl -sf localhost:8000/check \
+            -F product_type=spirits -F source=domestic -F "brand_name=OLD TOM DISTILLERY" \
+            -F images=@labels/out/old_tom_clean_front.png -F images=@labels/out/old_tom_clean_back.png \
+            -o result.html
+          grep -q "Nothing for you to look at" result.html
+
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/build-push-action@v6
+
+      - name: Push
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
-            ghcr.io/callmesteve/ttb-label-check:latest
-            ghcr.io/callmesteve/ttb-label-check:${{ github.sha }}
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ github.sha }}
+          cache-from: type=gha

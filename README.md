@@ -4,7 +4,7 @@ Label Check compares an alcohol label to its application and shows you where to 
 
 ## Try it
 
-Live app: TODO(Abdullah): public URL (treasurylabels.abdullah-sarwar.com once the domain is live). Alternate link: TODO(Abdullah): the azurecontainerapps.io address.
+Live app: https://treasurylabels.abdullah-sarwar.com (TODO(Abdullah): confirm it is live). Alternate link: TODO(Abdullah): the azurecontainerapps.io address.
 
 The sample files are in `labels/out/`. Three things to do, in this order:
 
