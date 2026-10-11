@@ -1,6 +1,6 @@
 import json
 import sys
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -12,7 +12,7 @@ def expected_cases() -> dict:
     return json.loads((OUT / "expected.json").read_text(encoding="utf-8"))
 
 
-@lru_cache(maxsize=None)
+@cache
 def run_case(name: str):
     from app.models import Application
     from app.pipeline import check_label

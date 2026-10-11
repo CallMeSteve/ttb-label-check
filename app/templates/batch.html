@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Check many labels{% endblock %}
+{% block main %}
+<h1>Check many labels</h1>
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+<form id="batch-form" method="post" action="/batch" enctype="multipart/form-data">
+  <section class="box">
+    <h2><span class="num">1</span> Add the pictures</h2>
+    <p>Drop many pictures, or one zip file. Each picture is its own application, unless the file names end in <code>_front</code>, <code>_back</code>, <code>_neck</code> or <code>_side</code>. Then pictures with the same start belong together, like <code>A123_front.jpg</code> and <code>A123_back.jpg</code>. Up to 300 applications.</p>
+    <label class="drop" id="drop" for="images">
+      <input id="images" name="images" type="file" multiple accept=".jpg,.jpeg,.png,.webp,.zip">
+      <span>Drop the pictures or a zip here, or click to choose.</span>
+    </label>
+    <p id="picked" class="small" aria-live="polite"></p>
+  </section>
+  <section class="box">
+    <h2><span class="num">2</span> What kind of products</h2>
+    <fieldset>
+      <legend>Type of product</legend>
+      <div class="choices">
+        {% for key, label in PRODUCT_LABELS.items() %}
+        <label class="choice"><input type="radio" name="product_type" value="{{ key }}" {% if form.product_type == key %}checked{% endif %}> {{ label }}</label>
+        {% endfor %}
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Source of product</legend>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="source" value="domestic" checked> Domestic</label>
+        <label class="choice"><input type="radio" name="source" value="imported"> Imported</label>
+      </div>
+    </fieldset>
+  </section>
+  <section class="box">
+    <h2><span class="num">3</span> Spreadsheet <span class="opt">(optional)</span></h2>
+    <p>Without a spreadsheet, every check that needs no application value still runs. A spreadsheet adds the comparisons with the application. <a href="/batch/template.csv">Download the template</a>.</p>
+    <label for="spreadsheet">Spreadsheet file (CSV)</label>
+    <input id="spreadsheet" name="spreadsheet" type="file" accept=".csv">
+  </section>
+  <button type="submit" class="primary" id="go" data-busy="Uploading... large batches can take a minute">Check these labels</button>
+</form>
+{% endblock %}

@@ -3,8 +3,7 @@ from __future__ import annotations
 from ..align import find_span
 from ..models import Application, CheckResult, Line, Part, Status, combine
 from ..normalize import squash_ws
-from ..rules_data import BRAND_CASE_RULES
-from ..rules_data import NAME_ADDRESS_PHRASES
+from ..rules_data import BRAND_CASE_RULES, NAME_ADDRESS_PHRASES
 from .common import biggest_text
 
 

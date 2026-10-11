@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Result{% endblock %}
+{% block main %}
+{% set confirm_needed = outcome.results | selectattr('confirm') | list | length > 0 %}
+<h1 class="headline {{ 'good' if outcome.look_count == 0 else 'attention' }}">{{ outcome.title }}</h1>
+<p class="small">Checked in {{ '%.1f' % outcome.seconds }} seconds{% if outcome.filenames %}. Pictures: {{ outcome.filenames | join(', ') }}{% endif %}.</p>
+{% if confirm_needed %}<p class="note">One thing only a person can check: whether GOVERNMENT WARNING: is bold and the rest is not. See the Government warning row.</p>{% endif %}
+<p class="small printonly" id="printed-at"></p>
+
+{% for r in outcome.results %}
+<details class="row {{ r.css }}" {% if r.needs_look or r.confirm or r.item == 'Picture' %}open{% endif %}>
+  <summary>
+    <span class="item">{{ r.item }}</span>
+    <span class="status"><span class="sym" aria-hidden="true">{{ r.symbol }}</span> {{ r.status_text }}</span>
+    {% if not r.needs_look and not r.confirm %}<span class="hint">Show picture</span>{% endif %}
+  </summary>
+  <div class="body">
+    {% if r.application_says %}<p class="says"><span>Application says:</span> {{ r.application_says }}</p>{% endif %}
+    {% if r.label_says %}<p class="says"><span>Label says:</span> {{ r.label_says }}</p>{% endif %}
+    <p class="reason">{{ r.reason }}</p>
+    {% if r.diff_view %}
+    <table class="diff">
+      <thead><tr><th scope="col">Required</th><th scope="col">On the label</th></tr></thead>
+      <tbody>{% for want, got in r.diff_view %}<tr><td><u>{{ want }}</u></td><td><u>{{ got }}</u></td></tr>{% endfor %}</tbody>
+    </table>
+    {% endif %}
+    {% for c in r.crops %}<img class="crop" src="{{ c }}" alt="The part of the label where {{ r.item | lower }} was read">{% endfor %}
+    {% if r.confirm %}<p class="confirm"><strong>Please check by eye.</strong> {{ r.confirm }}</p>{% endif %}
+    {% if r.rule %}<p class="rule">{{ r.rule }}</p>{% endif %}
+  </div>
+</details>
+{% endfor %}
+
+<div class="actions">
+  {% if batch_link %}
+  <a class="button" href="{{ batch_link }}">Back to the batch</a>
+  {% else %}
+  <a class="button primary" href="/?product_type={{ application.product_type }}&amp;source={{ application.source }}">Check another label</a>
+  {% endif %}
+  <button type="button" class="button" id="print">Print</button>
+</div>
+{% endblock %}

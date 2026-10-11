@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Label Check{% endblock %}</title>
+<link rel="stylesheet" href="/static/app.css">
+<link rel="stylesheet" href="/static/print.css" media="print">
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="/">Label Check</a>
+  <nav aria-label="Main">
+    <a href="/">Check a label</a>
+    <a href="/batch">Check many labels</a>
+    <a href="/help">Help</a>
+  </nav>
+  <a class="built" href="https://abdullah-sarwar.com/">Built by Abdullah Sarwar</a>
+</header>
+<main>
+{% block main %}{% endblock %}
+</main>
+<footer class="printonly">This is a checking aid, not a TTB decision.</footer>
+<script src="/static/app.js"></script>
+</body>
+</html>

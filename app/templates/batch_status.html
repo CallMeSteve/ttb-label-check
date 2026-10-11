@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Batch results{% endblock %}
+{% block main %}
+<h1>Check many labels</h1>
+<ul class="notes" id="notes">{% for n in data.notes %}<li>{{ n }}</li>{% endfor %}</ul>
+<p class="summary" id="summary" aria-live="polite">{{ data.done }} of {{ data.total }} done. {{ data.to_look }} to look at.</p>
+<p class="small">Results are kept for 24 hours and are lost if the service restarts. Nothing is written to disk.</p>
+<div class="actions">
+  <label class="choice"><input type="checkbox" id="only-look"> Show only the ones to look at</label>
+  <a class="button" id="csv-link" href="/batch/{{ job.id }}.csv">Download results (CSV)</a>
+</div>
+<noscript><p class="error">This page needs JavaScript to show progress. Reload it to see the latest.</p></noscript>
+<table class="queue" id="queue" data-job="{{ job.id }}">
+  <thead><tr><th scope="col">Application</th><th scope="col">Pictures</th><th scope="col">Result</th><th scope="col"><span class="sr">Open</span></th></tr></thead>
+  <tbody></tbody>
+</table>
+<p><a class="button" href="/batch">Check another batch</a></p>
+{% endblock %}

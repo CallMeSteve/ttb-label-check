@@ -6,7 +6,12 @@ from dataclasses import dataclass
 from ..models import Application, CheckResult, Line, Part, Status, combine
 from ..normalize import to_float
 from ..rules_data import (
-    METRIC_UNITS, SPIRITS_FILL_RULE, SPIRITS_FILLS_ML, UNIT_ML, WINE_FILL_RULE, WINE_FILLS_ML,
+    METRIC_UNITS,
+    SPIRITS_FILL_RULE,
+    SPIRITS_FILLS_ML,
+    UNIT_ML,
+    WINE_FILL_RULE,
+    WINE_FILLS_ML,
 )
 from .common import by_image, joined_text, lines_in
 

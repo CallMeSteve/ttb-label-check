@@ -1,0 +1,8 @@
+@page { margin: 14mm; }
+html { font-size: 12pt; }
+body { background: #fff; color: #000; }
+.site, .actions, button, .button, .hint, noscript { display: none !important; }
+.printonly { display: block !important; }
+.row, .box { background: #fff !important; break-inside: avoid; border-color: #000 !important; }
+.row .status, .headline { color: #000 !important; }
+.crop { max-width: 100%; }

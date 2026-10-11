@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Help{% endblock %}
+{% block main %}
+<h1>Help</h1>
+
+<h2>What each result means</h2>
+<table class="plain">
+  <tbody>
+    <tr><th scope="row">&#10003; Matches</th><td>The label agrees with the application, or follows the rule when there is no application value to compare.</td></tr>
+    <tr><th scope="row">&#9678; Look at this</th><td>The tool is not sure. The picture may be hard to read, or the wording is allowed but unusual. A person should look at the picture next to the row.</td></tr>
+    <tr><th scope="row">&#10007; Label and application disagree</th><td>The label says one thing and the application another. The tool does not say which one is wrong. TTB reports that about half of returned applications are wrong on the application side.</td></tr>
+    <tr><th scope="row">&#10007; Doesn't follow the rule</th><td>The label breaks a labeling rule by itself, with no application value involved. The rule is named under the row.</td></tr>
+    <tr><th scope="row">? Not on the label</th><td>The tool looked at every picture and did not find it.</td></tr>
+    <tr><th scope="row">i For your information</th><td>A fact from the label with nothing to compare it to.</td></tr>
+  </tbody>
+</table>
+<p>The tool never approves or rejects a label. That decision stays with the agent.</p>
+
+<h2>Why alcohol content, net contents and class are optional</h2>
+<p>TTB's current application form (5100.31) has no box for them. TTB removed them in 2016, because a producer may change those numbers on an approved label without applying again. So the tool checks them against the rules every time, and against the application only when you type a value.</p>
+
+<h2>Why capital letters don't matter, except in the warning</h2>
+<p>TTB lists changes of upper and lower case, and of punctuation, as allowable revisions for every kind of beverage. The spirits and beer rules also say mandatory information may be in capitals, lower case or mixed case. So STONE'S THROW and Stone's Throw are the same name. The one place capitals count is the first two words of the government warning: GOVERNMENT WARNING must be in capital letters.</p>
+
+<h2>What the tool can't tell from a photo</h2>
+<p>It can read the words and the capital letters of the warning. It can't reliably tell bold from regular type in a photo, so the Government warning row always shows the picture and asks you to confirm that GOVERNMENT WARNING: is bold and the rest is not. It also does not measure type size, because TTB does not routinely measure it either.</p>
+
+<h2>The rules, with links</h2>
+<ul>
+  <li><a href="https://www.ecfr.gov/current/title-27/section-16.21">27 CFR 16.21</a> and <a href="https://www.ecfr.gov/current/title-27/section-16.22">16.22</a>: the health warning text, capital letters and bold type.</li>
+  <li>Distilled spirits: <a href="https://www.ecfr.gov/current/title-27/section-5.52">5.52</a> (any case), <a href="https://www.ecfr.gov/current/title-27/section-5.63">5.63</a> (what must be on the label), <a href="https://www.ecfr.gov/current/title-27/section-5.65">5.65</a> (alcohol content), <a href="https://www.ecfr.gov/current/title-27/section-5.70">5.70</a> and <a href="https://www.ecfr.gov/current/title-27/section-5.203">5.203</a> (net contents and bottle sizes), <a href="https://www.ecfr.gov/current/title-27/section-5.143">5.143</a> (whisky spelling), and <a href="https://www.ecfr.gov/current/title-27/part-5/subpart-I">subpart I</a> (class minimums).</li>
+  <li>Wine: <a href="https://www.ecfr.gov/current/title-27/section-4.36">4.36</a> (alcohol content), <a href="https://www.ecfr.gov/current/title-27/section-4.37">4.37</a> and <a href="https://www.ecfr.gov/current/title-27/section-4.72">4.72</a> (net contents), <a href="https://www.ecfr.gov/current/title-27/section-4.32">4.32</a>.</li>
+  <li>Malt beverages: <a href="https://www.ecfr.gov/current/title-27/section-7.52">7.52</a> (any case), <a href="https://www.ecfr.gov/current/title-27/section-7.63">7.63</a>, <a href="https://www.ecfr.gov/current/title-27/section-7.65">7.65</a> and <a href="https://www.ecfr.gov/current/title-27/section-7.70">7.70</a> (net contents in U.S. units).</li>
+  <li><a href="https://www.ttb.gov/media/70320/download">TTB Form 5100.31</a>, including the allowable revisions.</li>
+</ul>
+{% endblock %}

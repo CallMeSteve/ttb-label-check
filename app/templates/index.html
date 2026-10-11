@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Check a label{% endblock %}
+{% block main %}
+<h1>Check a label</h1>
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+<form id="check-form" method="post" action="/check" enctype="multipart/form-data" novalidate>
+  <section class="box">
+    <h2><span class="num">1</span> What the application says</h2>
+    <p class="link-row"><a href="#" id="fill-example" data-example="{{ example | tojson | forceescape }}">Fill in the Old Tom example</a></p>
+
+    <fieldset>
+      <legend>Type of product</legend>
+      <div class="choices">
+        {% for key, label in PRODUCT_LABELS.items() %}
+        <label class="choice"><input type="radio" name="product_type" value="{{ key }}" {% if form.product_type == key %}checked{% endif %}> {{ label }}</label>
+        {% endfor %}
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Source of product</legend>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="source" value="domestic" {% if form.source != 'imported' %}checked{% endif %}> Domestic</label>
+        <label class="choice"><input type="radio" name="source" value="imported" {% if form.source == 'imported' %}checked{% endif %}> Imported</label>
+      </div>
+    </fieldset>
+
+    <label for="brand_name">Brand name</label>
+    <input id="brand_name" name="brand_name" type="text" value="{{ form.brand_name or '' }}" {% if field_error %}aria-invalid="true" aria-describedby="brand-error" autofocus{% endif %}>
+    {% if field_error %}<p class="error" id="brand-error" role="alert">{{ field_error }}</p>{% endif %}
+
+    <label for="fanciful_name">Fanciful name <span class="opt">(if the application has one)</span></label>
+    <input id="fanciful_name" name="fanciful_name" type="text" value="{{ form.fanciful_name or '' }}">
+
+    <p class="divider">These three aren't on the current application form. Fill them in if you have them; the label is checked against the rules either way.</p>
+
+    <label for="class_type">Class or type <span class="opt">(optional)</span></label>
+    <input id="class_type" name="class_type" type="text" value="{{ form.class_type or '' }}">
+
+    <label for="alcohol_content">Alcohol content <span class="opt">(optional, like 45% or 45)</span></label>
+    <input id="alcohol_content" name="alcohol_content" type="text" value="{{ form.alcohol_content or '' }}">
+
+    <label for="net_contents">Net contents <span class="opt">(optional, like 750 mL)</span></label>
+    <input id="net_contents" name="net_contents" type="text" value="{{ form.net_contents or '' }}">
+  </section>
+
+  <section class="box">
+    <h2><span class="num">2</span> Add the label pictures</h2>
+    <label class="drop" id="drop" for="images">
+      <input id="images" name="images" type="file" multiple accept=".jpg,.jpeg,.png,.webp">
+      <span>Drop the front and back of the label here, or click to choose. Up to 4 pictures.</span>
+    </label>
+    <ul id="thumbs" class="thumbs" aria-live="polite"></ul>
+  </section>
+
+  <button type="submit" class="primary" id="go" data-busy="Checking... usually a few seconds">Check this label</button>
+</form>
+{% endblock %}
