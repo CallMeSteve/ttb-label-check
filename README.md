@@ -91,7 +91,7 @@ I did not run real approved labels from the Public COLA Registry. That is the fi
 - Separate-and-apart, second-warning, and same-field-of-vision checks.
 - A shared cache for the same back label across a batch.
 - Non-English labels.
-- User accounts and an audit log. Nothing is written to disk. Batch results sit in memory for 24 hours.
+- User accounts and an audit log. Nothing is written to disk. Batch results sit in memory only and are cleared about 15 minutes after they were last opened, when the batch service goes idle.
 
 ## Run it yourself
 

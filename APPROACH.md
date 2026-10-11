@@ -19,7 +19,7 @@ TTB agents check a label against an application by eye, using a printed checklis
 | Smaller font, tricks | Not measured. See limits |
 | Bad angles and glare | EXIF rotation and the reader's angle classifier. Low confidence moves a row to "Look at this" and never to "Matches" |
 | Standalone, no COLA | No integration |
-| Little stored data | Nothing written to disk. Pictures are dropped after the crops are cut. Batch results stay in memory for 24 hours |
+| Little stored data | Nothing written to disk. Pictures are dropped after the crops are cut. Batch results stay in memory until the batch service goes idle, about 15 minutes after the last visit |
 | Azure shop | The same container runs on Azure Container Apps or App Service |
 
 ## Where the AI is, and where it isn't
@@ -62,7 +62,7 @@ Where a vision-language model would help next is badly photographed labels, wher
 - Bold is left to the agent, as above.
 - Type size is not measured. TTB doesn't routinely measure it either.
 - Glare and steep angles lower the reader's confidence and send rows to Look at this. My degraded set is mild, and the app has not been tested on real phone photos of bottles.
-- The batch store is in memory and does not survive a restart. A restart also drops running batches.
+- The batch store is in memory and does not survive a restart. On the hosted copy the batch service sleeps about 15 minutes after the last visit, which clears finished batches. The results page says so and offers the CSV. A shared store (a bucket or small database) would keep them longer; it is on the next-steps list.
 - Memory: each batch worker loads its own copy of the models. Four workers plus the web process need a few gigabytes. `BATCH_WORKERS` sets the pool size.
 - The tool expects a close-up of the label. Photos taken from a distance, small shop photos and curved glass at an angle may not read at all, and a row can then say "Not on the label" when the text is only too small to read.
 - Batch throughput is limited by CPU. On my PC, 150 applications took 165 s with 4 workers.

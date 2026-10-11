@@ -4,7 +4,7 @@
 <h1>Check many labels</h1>
 <ul class="notes" id="notes">{% for n in data.notes %}<li>{{ n }}</li>{% endfor %}</ul>
 <p class="summary" id="summary" aria-live="polite">{{ data.done }} of {{ data.total }} done. {{ data.to_look }} to look at.</p>
-<p class="small">Results are kept for 24 hours and are lost if the service restarts. Nothing is written to disk.</p>
+<p class="small">Results are held in memory only and never written to disk. They are cleared about 15 minutes after this page was last opened, so download the CSV to keep them.</p>
 <div class="actions">
   <label class="choice"><input type="checkbox" id="only-look"> Show only the ones to look at</label>
   <a class="button" id="csv-link" href="/batch/{{ job.id }}.csv">Download results (CSV)</a>

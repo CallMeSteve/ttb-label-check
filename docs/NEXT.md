@@ -12,3 +12,5 @@ Things I left out on purpose (amended spec) or noticed and did not build.
 - Batch results keep crops as data URIs in memory. About 50 MB for 300 applications. Regenerating them on demand would cut that.
 - A favicon and a social preview image.
 - Country of origin wording is shown only as a note on imports.
+- Keep batch results past the batch service's idle sleep (about 15 minutes) with a small shared store, such as a storage bucket with a 24-hour expiry.
+- Send very large photo batches in several uploads behind the scenes. Today the browser shrinks big photos, and one upload takes up to 30 MB (about 60 phone photos, or a few hundred label image files).
