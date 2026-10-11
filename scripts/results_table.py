@@ -33,5 +33,44 @@ for name, spec in expected_cases().items():
         miss += not ok
         lines.append(f"| {name} | {item} | {want} | {got.get(item)} | {'ok' if ok else 'MISS'} |")
 lines += ["", f"{miss} rows missed.", ""]
+
+BEFORE = {
+    "old-elk": "Government warning: Doesn't follow the rule. Net contents: Look at this.",
+    "jeffersons-ocean": "Class or type: disagree (picked the 'BOTTLED FOR JEFFERSON'S' line). Alcohol content and Name and address: Not on the label. "
+                        "Net contents: Look at this. Government warning: Doesn't follow the rule.",
+    "woodford-reserve": "Class or type: disagree (picked 'THIS EXCEPTIONAL BOURBON HAS BEEN CRAFTED'). Alcohol content: Not on the label. "
+                        "Net contents: Look at this. Government warning: Doesn't follow the rule.",
+    "laurel-glen": "Class or type: disagree (picked '2023 RED WINE BLEND'). Government warning: Doesn't follow the rule.",
+    "common-roots": "Brand name: disagree. Name and address: Not on the label. Government warning: Doesn't follow the rule.",
+}
+import json  # noqa: E402
+
+from app.models import Application  # noqa: E402
+from app.pipeline import check_label  # noqa: E402
+
+real = ROOT / "labels" / "real-cola"
+cases = json.loads((real / "cases.json").read_text(encoding="utf-8"))
+lines += [
+    "## Five real approved labels (Public COLA Registry)",
+    "",
+    "TTB approved these, so any \"Doesn't follow the rule\" is a false alarm. Application values typed are the COLA record's "
+    "(`labels/real-cola/cases.json`, sources in `labels/real-cola/SOURCES.md`). \"Before\" is the live app on 2026-10-11, "
+    "before the changes to the warning, class and net contents checks. \"After\" is this run.",
+    "",
+    "| Label | Before (non-matching rows) | After (non-matching rows) |",
+    "|---|---|---|",
+]
+for name, c in cases.items():
+    files = [(f, (real / f).read_bytes()) for f in c["images"]]
+    out = check_label(Application(**c["application"]), files)
+    after = "; ".join(f"{r.item}: {r.status_text}" for r in out.results if r.status.name not in ("MATCH", "INFO"))
+    lines.append(f"| {name} | {BEFORE[name]} | {after or 'all rows Match'} |")
+lines += [
+    "",
+    "Known limits seen on these labels: small or curved text (the alcohol statement on two labels) is sometimes not read at all, "
+    "and the row then says \"Not on the label\". The net contents row is Look at this when the amount is molded into the glass. "
+    "Where the warning has a letter or two the reader isn't sure of, the row is Look at this with the crop and the word shown.",
+    "",
+]
 (ROOT / "docs" / "results.md").write_text("\n".join(lines), encoding="utf-8")
 print(f"{miss} rows missed")

@@ -9,7 +9,7 @@ _ORIGIN = re.compile(r"\b(?:product|produce|made|distilled|bottled|brewed)\s+(?:
 
 
 def _starts_with_phrase(text: str, phrases: tuple[str, ...]) -> str | None:
-    low = re.sub(r"\s+", " ", text.lower())
+    low = re.sub(r"\s+", " ", text.lower().replace("&", " and "))
     for p in phrases:
         if re.search(rf"\b{re.escape(p)}\b", low):
             return p

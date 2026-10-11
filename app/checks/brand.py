@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from ..align import find_span
 from ..models import Application, CheckResult, Line, Part, Status, combine
-from ..normalize import squash_ws
+from ..normalize import fold, squash_ws
 from ..rules_data import BRAND_CASE_RULES, NAME_ADDRESS_PHRASES
 from .common import biggest_text
 
@@ -14,7 +14,8 @@ def _is_producer_line(text: str) -> bool:
 
 def _name_check(item: str, given: str, app: Application, lines: list[Line]) -> CheckResult:
     # The producer's own name in 'Bottled by ...' is not the brand on the front of the label.
-    span = find_span(given, [ln for ln in lines if not _is_producer_line(ln.text)])
+    candidates = [ln for ln in lines if not _is_producer_line(ln.text)]
+    span = find_span(given, candidates)
     big = biggest_text(lines)
     big_note = f" Biggest text on the label: '{big.text}'." if big else ""
     rule = BRAND_CASE_RULES[app.product_type]
@@ -30,6 +31,13 @@ def _name_check(item: str, given: str, app: Application, lines: list[Line]) -> C
         part = Part(Status.LOOK, "Probably the same name; the reader wasn't sure of one letter.",
                     None, span.lines)
         return combine(item, [part], given, span.found)
+    if span.kind in ("near", "none"):
+        wanted = set(fold(given).split())
+        for ln in candidates:
+            toks = fold(ln.text).split()
+            if toks and all(t in wanted for t in toks) and len(set(toks)) * 2 >= len(wanted):
+                part = Part(Status.LOOK, "The label shows only part of that name. Look at the picture.", None, [ln])
+                return combine(item, [part], given, ln.text)
     if span.kind == "near":
         lines_used = list(span.lines) + ([big] if big else [])
         part = Part(Status.DISAGREE, "The name on the label is different from the application." + big_note,

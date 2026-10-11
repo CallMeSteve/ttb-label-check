@@ -1,0 +1,12 @@
+{
+ "old-elk": {"images": ["old-elk_front.jpg", "old-elk_back.jpg"],
+   "application": {"product_type": "spirits", "source": "domestic", "brand_name": "Old Elk", "class_type": "Straight Bourbon Whiskey", "alcohol_content": "46% Alc./Vol. (92 Proof)", "net_contents": "750 mL"}},
+ "jeffersons-ocean": {"images": ["jeffersons-ocean_front.png", "jeffersons-ocean_back.png"],
+   "application": {"product_type": "spirits", "source": "domestic", "brand_name": "Jefferson's", "fanciful_name": "Ocean", "class_type": "Straight Bourbon Whiskey", "alcohol_content": "45% Alc./Vol. (90 Proof)", "net_contents": "750 mL"}},
+ "woodford-reserve": {"images": ["woodford-reserve_front.jpg", "woodford-reserve_back.jpg"],
+   "application": {"product_type": "spirits", "source": "domestic", "brand_name": "Woodford Reserve", "class_type": "Straight Bourbon Whisky", "alcohol_content": "45.2% Alc./Vol. (90.4 Proof)", "net_contents": "750 mL"}},
+ "laurel-glen": {"images": ["laurel-glen_front.jpg", "laurel-glen_back.jpg"],
+   "application": {"product_type": "wine", "source": "domestic", "brand_name": "Laurel Glen Vineyard", "fanciful_name": "Left Bank", "class_type": "Table Red Wine", "alcohol_content": "14.1% Alc./Vol.", "net_contents": "750 mL"}},
+ "common-roots": {"images": ["common-roots_front.png"],
+   "application": {"product_type": "malt", "source": "domestic", "brand_name": "Common Roots Brewing Company", "fanciful_name": "Lager", "class_type": "Beer", "alcohol_content": "5.2% Alc./Vol.", "net_contents": "1 Pint (16 fl oz)"}}
+}

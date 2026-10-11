@@ -74,8 +74,8 @@ def check_net(app: Application, lines: list[Line]) -> CheckResult:
     amounts = find_amounts(lines)
     app_says = app.net_contents.strip() or "not given"
     if not amounts:
-        part = Part(Status.LOOK, "Not found on the label image. It can be molded into the glass; "
-                    "check item 15 of the application.",
+        part = Part(Status.LOOK, "Not printed on this label. On many bottles the amount is molded into the glass "
+                    "(form item 15). Check the bottle.",
                     "27 CFR 5.61(a)(2), 5.63(b)(2)" if pt == "spirits" else
                     "27 CFR 4.32(b)(2)" if pt == "wine" else "27 CFR 7.63(a)(5)")
         return combine("Net contents", [part], app_says, None)

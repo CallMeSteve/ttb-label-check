@@ -70,3 +70,13 @@ def parse_abv(text: str) -> float | None:
     """45, 45%, 45% Alc./Vol. (90 Proof) all give 45.0."""
     m = re.search(_NUM, text or "")
     return to_float(m.group(1)) if m else None
+
+
+def levenshtein(a: str, b: str) -> int:
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i]
+        for j, cb in enumerate(b, 1):
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
+        prev = cur
+    return prev[-1]

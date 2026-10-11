@@ -34,8 +34,8 @@ def biggest_text(lines: list[Line]) -> Line | None:
     groups = by_image(lines)
     if not groups:
         return None
-    first = groups[min(groups)]
-    return max(first, key=lambda ln: ln.box.height)
+    first = [ln for ln in groups[min(groups)] if sum(c.isalpha() for c in ln.text) >= 3]  # not a barcode
+    return max(first, key=lambda ln: ln.box.height) if first else None
 
 
 def detect_class(lines: list[Line], product_type: str) -> tuple[str | None, Line | None]:

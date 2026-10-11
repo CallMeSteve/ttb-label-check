@@ -29,9 +29,9 @@ def test_clause_two_removed():
     assert r.status is Status.DISAGREE and "Missing" in r.reason
 
 
-def test_missing_colon_is_wording():
+def test_unread_colon_is_a_look_not_a_violation():
     r = run(WARN.replace("WARNING:", "WARNING"))
-    assert r.status is Status.DISAGREE
+    assert r.status is Status.LOOK
 
 
 def test_ocr_unsure_only():
@@ -52,3 +52,20 @@ def test_extra_text_after_warning_is_ignored():
 def test_low_confidence_cannot_match():
     r = check_warning(APP, mk(wrap(WARN), conf=0.4))
     assert r.status is Status.LOOK
+
+
+def test_all_caps_body_is_legal():
+    assert run(WARN.upper()).status is Status.MATCH
+
+
+def test_ocr_noise_inside_words_is_a_look_not_a_violation():
+    noisy = (WARN.replace("GOVERNMENT WARNING:", "GOVERNMENTWARNING:").replace("(1)", "[1)")
+             .replace("operate", "opérate").replace("ability", "abiuty").replace("alcoholic", "alcohouc", 1))
+    r = run(noisy)
+    assert r.status is Status.LOOK, r.reason
+
+
+def test_hyphenated_line_break_and_stray_lines_do_not_break_the_match():
+    text = WARN.replace("Consumption", "Consump-\ntion").split("\n")
+    lines = mk(wrap(text[0], 60) + wrap(text[1], 60)[:1] + ["www.responsibility.org"] + wrap(text[1], 60)[1:])
+    assert check_warning(APP, lines).status is Status.MATCH

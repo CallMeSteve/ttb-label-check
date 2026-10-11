@@ -22,6 +22,16 @@ def _present(word: str, tokens: list[str]) -> str:
     return "no"
 
 
+_PROSE = {"THE", "THIS", "THAT", "HAS", "BEEN", "FOR", "BY", "IN", "OF", "WITH", "FROM", "A", "AN", "AND", "IS",
+          "TO", "ARE", "WWW", "COM", "OUR", "YOUR", "IT"}
+
+
+def _is_class_line(text: str) -> bool:
+    """A short line of plain class words. Not a sentence, a watermark, or a line with a year or a symbol."""
+    toks = fold_whisky(text).split()
+    return 0 < len(toks) <= 5 and not any(t in _PROSE or t.isdigit() for t in toks) and "|" not in text
+
+
 def _without_address(lines: list[Line]) -> list[Line]:
     """Drop each 'Bottled by ...' line and the city and state line under it. They are not the class."""
     drop: set[int] = set()
@@ -36,7 +46,7 @@ def check_class(app: Application, all_lines: list[Line]) -> CheckResult:
     lines = _without_address(all_lines)
     given = app.class_type.strip()
     if not given:
-        key, ln = detect_class(lines, app.product_type)
+        key, ln = detect_class([ln for ln in lines if _is_class_line(ln.text)], app.product_type)
         if ln is None:
             part = Part(Status.INFO, "No class or type designation was recognised on the label.")
             return combine("Class or type", [part], None, None)
@@ -50,6 +60,8 @@ def check_class(app: Application, all_lines: list[Line]) -> CheckResult:
         for i in range(len(img_lines)):
             for span in (img_lines[i:i + 1], img_lines[i:i + 2]):
                 toks = fold_whisky(" ".join(ln.text for ln in span)).split()
+                if len(toks) > len(words) + 3:  # a sentence that merely contains a class word is not a class line
+                    continue
                 score = sum(1 for w in words if _present(w, toks) != "no")
                 key = (score, -len(toks))
                 if best is None or key > best[0]:
@@ -57,10 +69,14 @@ def check_class(app: Application, all_lines: list[Line]) -> CheckResult:
     if best is None or best[0][0] * 2 < len(words):
         # No line holds most of the typed words. Report the label's own class if there is one.
         found = None
+        short = [ln for ln in lines if _is_class_line(ln.text)]
         for kind in (app.product_type, "spirits", "wine", "malt"):  # the picked product type may be wrong
-            _, found = detect_class(lines, kind)
+            _, found = detect_class(short, kind)
             if found is not None:
                 break
+        if found is not None and fold_whisky(given) == "BEER" and kind == "malt":
+            return combine("Class or type", [Part(Status.MATCH, "A kind of beer.", None, [found])], given,
+                           squash_ws(found.text))
         if found is not None:
             reason = f"Application says '{given}', label says '{squash_ws(found.text)}'."
             return combine("Class or type", [Part(Status.DISAGREE, reason, RULE, [found])], given, squash_ws(found.text))
@@ -75,9 +91,9 @@ def check_class(app: Application, all_lines: list[Line]) -> CheckResult:
         if legal:
             reason = (f"Application says '{given}', label says '{label_text}'. "
                       f"'{legal[0].title()}' has a legal meaning.")
-        else:
-            reason = f"Application says '{given}', label says '{label_text}'."
-        return combine("Class or type", [Part(Status.DISAGREE, reason, RULE, span)], given, label_text)
+            return combine("Class or type", [Part(Status.DISAGREE, reason, RULE, span)], given, label_text)
+        reason = f"Application says '{given}', label says '{label_text}'. Look at the picture to see whether they mean the same."
+        return combine("Class or type", [Part(Status.LOOK, reason, RULE, span)], given, label_text)
     added = _sig(" ".join(toks)) - app_sig
     if added:
         word = sorted(added)[0].title()

@@ -53,7 +53,7 @@ MALT_CLASSES = ("MALT BEVERAGE", "MALT LIQUOR", "BEER", "ALE", "LAGER", "STOUT",
 NAME_ADDRESS_PHRASES = (
     "distilled and bottled by", "brewed and bottled by", "bottled by", "distilled by",
     "produced by", "blended by", "made by", "prepared by", "manufactured by", "canned by",
-    "packed by", "filled by", "brewed by", "imported by", "vinted by", "cellared by",
+    "packed by", "packaged by", "bottled for", "filled by", "brewed by", "imported by", "vinted by", "cellared by",
 )
 NAME_ADDRESS_RULES = {
     "spirits": "27 CFR 5.63(b)(1)", "wine": "27 CFR 4.32(b)(1)", "malt": "27 CFR 7.63(a)(4)",
