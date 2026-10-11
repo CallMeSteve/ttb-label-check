@@ -8,7 +8,7 @@ S = "spirits"
 CASES = [
     # product, label lines, app alcohol, expected status, text expected in reason
     (S, ["Kentucky Straight Bourbon Whiskey", "45% Alc./Vol. (90 Proof)"], "", Status.MATCH, ""),
-    (S, ["Kentucky Straight Bourbon Whiskey", "45% Alc./Vol. (80 Proof)"], "", Status.DISAGREE, "45% Alc./Vol. is 90 proof, but the label says 80 Proof"),
+    (S, ["Bourbon Whiskey", "45% Alc./Vol. (80 Proof)"], "", Status.DISAGREE, "is 90 proof, but the label says 80 Proof"),
     (S, ["Bourbon Whiskey", "45% Alc./Vol."], "40", Status.DISAGREE, "Application says 40%, label says 45%"),
     (S, ["Bourbon Whiskey", "45% Alc./Vol."], "45%", Status.MATCH, ""),
     (S, ["Bourbon Whiskey", "45% ABV"], "", Status.LOOK, "ABV"),

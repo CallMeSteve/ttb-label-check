@@ -122,6 +122,7 @@ def check_alcohol(app: Application, lines: list[Line]) -> CheckResult:
     if table_wine and abv.value > 14:
         parts.append(Part(Status.DISAGREE, "Table wine and light wine can't be over 14% alcohol.",
                           "27 CFR 4.21(a)(5), 4.36(a)", ev))
+    rule_failed = any(p.status is Status.DISAGREE for p in parts)
     app_differs = app_val is not None and app_val != abv.value
     if app_differs:
         parts.append(Part(Status.DISAGREE,
@@ -133,5 +134,5 @@ def check_alcohol(app: Application, lines: list[Line]) -> CheckResult:
             reason += " Application: not given, so only the rules were checked."
         parts.append(Part(Status.MATCH, reason, None, ev))
     result = combine("Alcohol content", parts, app_says, label_says)
-    result.rule_only = not app_differs
+    result.rule_only = rule_failed or not app_differs
     return result
