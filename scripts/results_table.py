@@ -53,9 +53,10 @@ cases = json.loads((real / "cases.json").read_text(encoding="utf-8"))
 lines += [
     "## Five real approved labels (Public COLA Registry)",
     "",
-    "TTB approved these, so any \"Doesn't follow the rule\" is a false alarm. Application values typed are the COLA record's "
-    "(`labels/real-cola/cases.json`, sources in `labels/real-cola/SOURCES.md`). \"Before\" is the live app on 2026-10-11, "
-    "before the changes to the warning, class and net contents checks. \"After\" is this run.",
+    "TTB approved these, so any \"Doesn't follow the rule\" or disagreement is a false alarm. \"After\" types only what each record's "
+    "application page holds (product type, source, brand, fanciful name; the form has no class, alcohol or net contents box), "
+    "see `labels/real-cola/SOURCES.md`. \"Before\" is the live app on 2026-10-11, before the changes to the warning, class and "
+    "net contents checks; that run also typed class, alcohol and net contents values that were guessed, not taken from the record.",
     "",
     "| Label | Before (non-matching rows) | After (non-matching rows) |",
     "|---|---|---|",

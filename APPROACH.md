@@ -44,6 +44,8 @@ Where a vision-language model would help next is badly photographed labels, wher
 
 **Government warning.** The canonical text is stored as one paragraph and compared word by word with the label's lines. Each difference is either "the reader may have misread" (confusable shapes, a changed capital, a missing mark) or "the wording is different" (an added, missing or changed word, or a missing colon). The first two words must be capitals, judged on the raw reader output. Text after the end of the warning is ignored. Low confidence can't produce Matches.
 
+**A one-character difference is "Look at this", not a failure.** On real approved labels the reader returned things like GOVERNMENTWARNING with no space, "[1)" for "(1)", ALCOHOUC for ALCOHOLIC and a dropped hyphen at a line end. A text reader can't tell a typo on the label from its own misread, so a difference of a letter or two inside a word, a dropped space, an accent or a punctuation mark gives "Look at this" with the crop and the word shown. A violation needs real evidence: a missing, added or changed word, the heading not in capitals, or no warning. The rest of the warning may be in any case. 27 CFR 16.22(a)(2) requires capitals and bold only for the first two words, so an all-caps body is accepted. The cost is that a label with a one-letter typo in the warning gets a look, not a fail.
+
 **Bold.** I did not build a bold detector. I planned one that compared stroke width in the header with the rest of the line. Then I decided against shipping a measurement that could say "bold confirmed" on a blurry photo. The rule also requires that the rest of the warning is not bold, and a check that gets one direction right and the other wrong is worse than none. So the warning row always shows the crop and asks the agent to confirm both. I set the headline so a clean label still reads "Nothing for you to look at" and a line under it points to the one check by eye.
 
 ## Assumptions
@@ -62,6 +64,7 @@ Where a vision-language model would help next is badly photographed labels, wher
 - Glare and steep angles lower the reader's confidence and send rows to Look at this. My degraded set is mild, and the app has not been tested on real phone photos of bottles.
 - The batch store is in memory and does not survive a restart. A restart also drops running batches.
 - Memory: each batch worker loads its own copy of the models. Four workers plus the web process need a few gigabytes. `BATCH_WORKERS` sets the pool size.
+- The tool expects a close-up of the label. Photos taken from a distance, small shop photos and curved glass at an angle may not read at all, and a row can then say "Not on the label" when the text is only too small to read.
 - Batch throughput is limited by CPU. On my PC, 150 applications took 165 s with 4 workers.
 - Rendered labels are clean by construction. They show the rules work. They do not show the reader works on every label in the world.
 

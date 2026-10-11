@@ -21,8 +21,13 @@ def rows(name):
 
 @pytest.mark.parametrize("name", sorted(CASES))
 def test_no_false_rule_failures(name):
-    bad = [(r.item, r.status_text, r.reason) for r in rows(name)
-           if r.status_text in ("Doesn't follow the rule", "Label and application disagree")]
+    bad = [(r.item, r.status_text, r.reason) for r in rows(name) if r.status.name == "DISAGREE"]
+    assert not bad, bad
+
+
+@pytest.mark.parametrize("name", sorted(CASES))
+def test_typed_names_are_never_reported_as_not_on_the_label(name):
+    bad = [r.item for r in rows(name) if r.item in ("Brand name", "Fanciful name") and r.status.name == "MISSING"]
     assert not bad, bad
 
 

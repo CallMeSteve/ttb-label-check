@@ -12,7 +12,7 @@ def _is_producer_line(text: str) -> bool:
     return any(p in low for p in NAME_ADDRESS_PHRASES)
 
 
-def _name_check(item: str, given: str, app: Application, lines: list[Line]) -> CheckResult:
+def _name_check(item: str, given: str, app: Application, lines: list[Line], missing=Status.MISSING) -> CheckResult:
     # The producer's own name in 'Bottled by ...' is not the brand on the front of the label.
     candidates = [ln for ln in lines if not _is_producer_line(ln.text)]
     span = find_span(given, candidates)
@@ -44,7 +44,7 @@ def _name_check(item: str, given: str, app: Application, lines: list[Line]) -> C
                     None, lines_used)
         return combine(item, [part], given, span.found)
     lines_used = [big] if big else []
-    part = Part(Status.MISSING, f"Couldn't find '{given}' on the label." + big_note, None, lines_used)
+    part = Part(missing, f"Couldn't find '{given}' on the label." + big_note, None, lines_used)
     return combine(item, [part], given, None)
 
 
@@ -63,4 +63,5 @@ def check_brand(app: Application, lines: list[Line]) -> CheckResult:
 def check_fanciful(app: Application, lines: list[Line]) -> CheckResult | None:
     if not app.fanciful_name.strip():
         return None
-    return _name_check("Fanciful name", app.fanciful_name.strip(), app, lines)
+    # A fanciful name is often a phrase spread over the artwork, so not finding it is a look, not a verdict.
+    return _name_check("Fanciful name", app.fanciful_name.strip(), app, lines, missing=Status.LOOK)
