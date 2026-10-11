@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from ..models import Application, CheckResult, Line, Part, Status, combine
 from ..normalize import fold_whisky, ocr_confusable, squash_ws
-from ..rules_data import SIGNIFICANT_WORDS
+from ..rules_data import NAME_ADDRESS_PHRASES, SIGNIFICANT_WORDS
 from .common import by_image, detect_class
 
 RULE = "27 CFR 5.143(b)"
@@ -22,7 +22,18 @@ def _present(word: str, tokens: list[str]) -> str:
     return "no"
 
 
-def check_class(app: Application, lines: list[Line]) -> CheckResult:
+def _without_address(lines: list[Line]) -> list[Line]:
+    """Drop each 'Bottled by ...' line and the city and state line under it. They are not the class."""
+    drop: set[int] = set()
+    for i, ln in enumerate(lines):
+        low = " ".join(ln.text.lower().split())
+        if any(p in low for p in NAME_ADDRESS_PHRASES):
+            drop.update((i, i + 1))
+    return [ln for i, ln in enumerate(lines) if i not in drop]
+
+
+def check_class(app: Application, all_lines: list[Line]) -> CheckResult:
+    lines = _without_address(all_lines)
     given = app.class_type.strip()
     if not given:
         key, ln = detect_class(lines, app.product_type)
@@ -43,8 +54,14 @@ def check_class(app: Application, lines: list[Line]) -> CheckResult:
                 key = (score, -len(toks))
                 if best is None or key > best[0]:
                     best = (key, span, toks)
-    if best is None or best[0][0] == 0:
-        return combine("Class or type", [Part(Status.MISSING, f"Couldn't find '{given}' on the label.")], given, None)
+    if best is None or best[0][0] * 2 < len(words):
+        # No line holds most of the typed words. Report the label's own class if there is one.
+        _, found = detect_class(lines, app.product_type)
+        if found is not None:
+            reason = f"Application says '{given}', label says '{squash_ws(found.text)}'."
+            return combine("Class or type", [Part(Status.DISAGREE, reason, RULE, [found])], given, squash_ws(found.text))
+        reason = "Couldn't find a class or type on the label. Look at the picture."
+        return combine("Class or type", [Part(Status.LOOK, reason)], given, None)
     _, span, toks = best
     label_text = squash_ws(" ".join(ln.text for ln in span))
     states = [_present(w, toks) for w in words]

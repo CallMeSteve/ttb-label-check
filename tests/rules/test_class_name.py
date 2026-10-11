@@ -9,7 +9,7 @@ CLASS_CASES = [
     ("Kentucky Straight Bourbon Whiskey", "Kentucky Straight Bourbon Whisky", Status.MATCH),
     ("Bourbon Whiskey", "Straight Bourbon Whiskey", Status.DISAGREE),
     ("Straight Bourbon Whiskey", "Bourbon Whiskey", Status.DISAGREE),
-    ("Vodka", "Bourbon Whiskey", Status.MISSING),
+    ("Vodka", "Bourbon Whiskey", Status.DISAGREE),
 ]
 
 
@@ -41,3 +41,22 @@ def test_name_address_missing():
 def test_import_without_importer():
     r = check_name_address(Application(source="imported"), mk(["Bottled by Old Tom", "Dublin"]))
     assert r.status is Status.LOOK and "Imported by" in r.reason
+
+
+ADDRESS = ["Distilled and bottled by Old Tom Distillery", "Louisville, Kentucky"]
+EXAMPLE_CLASS = "Kentucky Straight Bourbon Whisky"
+
+
+def test_address_line_is_never_the_class():
+    r = check_class(Application(class_type=EXAMPLE_CLASS), mk(["OLD TOM", "Rum"] + ADDRESS))
+    assert r.status is Status.DISAGREE and r.label_says == "Rum"
+
+
+def test_no_class_on_label_asks_for_a_look_not_a_disagreement():
+    r = check_class(Application(class_type=EXAMPLE_CLASS), mk(["OLD TOM", "750 mL"] + ADDRESS))
+    assert r.status is Status.LOOK and "Couldn't find" in r.reason and r.label_says is None
+
+
+def test_whisky_and_whiskey_are_equal():
+    r = check_class(Application(class_type="Straight Bourbon Whisky"), mk(["Straight Bourbon Whiskey"]))
+    assert r.status is Status.MATCH
