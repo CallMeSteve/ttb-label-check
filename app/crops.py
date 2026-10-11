@@ -35,11 +35,30 @@ def crop_data_uri(im: Image.Image, box: Box, color: str) -> str:
     return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
 
 
-def attach_crops(results: list[CheckResult], images: list[Image.Image]) -> None:
+def _clusters(boxes: list[Box]) -> list[list[Box]]:
+    """Group boxes that sit next to each other, so two far-apart lines get two small pictures
+    instead of one picture of everything between them."""
+    boxes = sorted(boxes, key=lambda b: b.y0)
+    tall = sorted(b.y1 - b.y0 for b in boxes)[len(boxes) // 2]
+    groups: list[list[Box]] = [[boxes[0]]]
+    for b in boxes[1:]:
+        if b.y0 - max(g.y1 for g in groups[-1]) <= 1.5 * tall:
+            groups[-1].append(b)
+        else:
+            groups.append([b])
+    return groups
+
+
+def attach_crops(results: list[CheckResult], images: list[Image.Image], limit: int = 3) -> None:
     for r in results:
         by_img: dict[int, list[Box]] = {}
         for b in r.evidence:
             by_img.setdefault(b.image_index, []).append(b)
-        for idx in sorted(by_img)[:2]:
-            if idx < len(images):
-                r.crops.append(crop_data_uri(images[idx], _union(by_img[idx]), COLORS[r.status]))
+        for idx in sorted(by_img):
+            if idx >= len(images):
+                continue
+            # The warning is one block of text, so it stays one picture even across many lines.
+            groups = [by_img[idx]] if r.item == "Government warning" else _clusters(by_img[idx])
+            for g in groups:
+                if len(r.crops) < limit:
+                    r.crops.append(crop_data_uri(images[idx], _union(g), COLORS[r.status]))

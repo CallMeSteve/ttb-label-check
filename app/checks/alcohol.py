@@ -12,6 +12,7 @@ _NUM = r"(\d{1,3}(?:[.,]\d+)?)"
 _PCT = re.compile(rf"{_NUM}\s*(?:%|percent)", re.I)
 _RANGE = re.compile(r"alcohol\s+(\d{1,2})\s*%?\s+to\s+(\d{1,2})\s*%\s+by\s+vol", re.I)
 _PROOF = re.compile(r"(\d+(?:\.\d+)?)\s*(?:°\s*)?proof", re.I)
+_KEYWORD = re.compile(r"(alc|vol|abv)", re.I)
 _NOT_ALCOHOL = re.compile(r"^\s*(agave|natural|grain|neutral|fruit|malt|juice|barley|corn|rye|wheat|whisk|spirits)", re.I)
 
 CITES = {
@@ -45,9 +46,14 @@ def find_abv(lines: list[Line]) -> AbvFound | None:
             if _NOT_ALCOHOL.match(text[m.end():m.end() + 14]):
                 continue
             form = "abv" if has_abv and not has_std else "standard" if has_std else "bare"
-            start = max(0, m.start() - 22) if has_std else m.start()
-            found.append(AbvFound(to_float(m.group(1)), form, text[m.start():m.end()],
-                                  lines_in(spans, start, m.end() + 14 if has_std else m.end())))
+            # Point the picture at the line holding the number, plus the Alc./Vol. line only when that word
+            # sits on a separate line right next to it. Never at neighbouring lines that just fall in the window.
+            cited = lines_in(spans, m.start(), m.end())
+            if has_std and not any(_KEYWORD.search(ln.text) for ln in cited):
+                near = [ln for ln in lines_in(spans, max(0, m.start() - 22), m.end() + 24)
+                        if ln not in cited and _KEYWORD.search(ln.text)]
+                cited += near[:1]
+            found.append(AbvFound(to_float(m.group(1)), form, text[m.start():m.end()], cited))
     for want in ("standard", "abv", "bare"):
         for f in found:
             if f.form == want:
@@ -113,6 +119,9 @@ def check_alcohol(app: Application, lines: list[Line]) -> CheckResult:
                     Status.DISAGREE,
                     f"The label contradicts itself: {_num(abv.value)}% Alc./Vol. is {_num(2 * abv.value)} proof, "
                     f"but the label says {_num(proof[0])} Proof.", "27 CFR 5.1, 5.65(b)(1)(i)", ev))
+        if len(ev) <= 2:
+            # Quote the label's own words when the statement is on one or two lines.
+            label_says = " ".join(dict.fromkeys(ln.text.strip() for ln in ev))
         key, class_line = detect_class(lines, "spirits")
         minimum = class_minimum(key, lines)
         if minimum is not None and abv.value < minimum and class_line is not None:
