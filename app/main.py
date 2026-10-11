@@ -125,7 +125,9 @@ _HOP = {"connection", "keep-alive", "proxy-authenticate", "proxy-authorization",
 async def forward_batch(request: Request, call_next):
     base = os.environ.get("BATCH_BACKEND_URL", "").rstrip("/")
     path = request.url.path
-    if not base or not (path == "/batch" or path.startswith("/batch/")):
+    # The batch page itself is served here, so just opening it never wakes the batch service.
+    is_page = path == "/batch" and request.method == "GET"
+    if not base or is_page or not (path == "/batch" or path.startswith("/batch/")):
         return await call_next(request)
     target = base + ("/health" if path == "/batch/warm" else path)
     if request.url.query:

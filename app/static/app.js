@@ -12,6 +12,8 @@
 
   function sync() {
     if (!input) { return; }
+    var old = document.getElementById("size-error");
+    if (old) { old.remove(); }
     var dt = new DataTransfer();
     chosen.forEach(function (f) { dt.items.add(f); });
     input.files = dt.files;
@@ -36,20 +38,61 @@
     });
   }
 
+  // Phone photos can be 5 MB or more, and the host refuses one upload over about 32 MB.
+  // Big pictures are shrunk here to 2000 pixels on the long side, which is still more
+  // than the reader uses (1600). The file name is kept so spreadsheet rows still match.
+  var MAX_SIDE = 2000;
+  var UPLOAD_LIMIT = 30 * 1024 * 1024;
+  var preparing = 0;
+
+  function shrink(f) {
+    if (!/^image\/(jpeg|png|webp)$/.test(f.type) || f.size < 1500000 || !window.createImageBitmap) {
+      return Promise.resolve(f);
+    }
+    return createImageBitmap(f, { imageOrientation: "from-image" }).then(function (bmp) {
+      var scale = Math.min(1, MAX_SIDE / Math.max(bmp.width, bmp.height));
+      var c = document.createElement("canvas");
+      c.width = Math.round(bmp.width * scale);
+      c.height = Math.round(bmp.height * scale);
+      c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+      return new Promise(function (resolve) {
+        c.toBlob(function (b) {
+          resolve(b && b.size < f.size ? new File([b], f.name, { type: "image/jpeg", lastModified: f.lastModified }) : f);
+        }, "image/jpeg", 0.9);
+      });
+    }).catch(function () { return f; });
+  }
+
+  function busy(on) {
+    var go = $("go");
+    if (!go) { return; }
+    if (!go.getAttribute("data-idle")) { go.setAttribute("data-idle", go.textContent); }
+    go.disabled = on;
+    go.textContent = on ? "Preparing pictures..." : go.getAttribute("data-idle");
+  }
+
+  function same(a, b) { return a.name === b.name && a.lastModified === b.lastModified; }
+
   function add(files) {
-    Array.prototype.forEach.call(files, function (f) { chosen.push(f); });
-    sync();
+    var fresh = Array.prototype.slice.call(files).filter(function (f) {
+      return !chosen.some(function (k) { return same(k, f); });
+    });
+    if (!fresh.length) { sync(); return; }
+    preparing += 1; busy(true);
+    Promise.all(fresh.map(shrink)).then(function (small) {
+      chosen = chosen.concat(small);
+      sync();
+      warmBatch();
+    }).finally(function () {
+      preparing -= 1;
+      if (!preparing) { busy(false); }
+    });
   }
 
   if (input) {
     input.addEventListener("change", function () {
       // The browser replaced the list with the new pick; take it as the added files.
-      var fresh = Array.prototype.slice.call(input.files);
-      var known = chosen.slice();
-      chosen = known.concat(fresh.filter(function (f) {
-        return !known.some(function (k) { return k.name === f.name && k.size === f.size; });
-      }));
-      sync();
+      if (input.files.length) { add(input.files); }
     });
   }
   if (drop) {
@@ -65,14 +108,36 @@
     });
   }
 
-  // Wake whatever does the batch work while the person picks their files.
-  if ($("batch-form")) { fetch("/batch/warm").catch(function () {}); }
+  // Once files are picked on the batch page (see add), wake whatever does the batch work,
+  // at most once a minute. Never on page load, so just looking at the page costs nothing.
+  var warmedAt = 0;
+  function warmBatch() {
+    if (!$("batch-form") || !chosen.length || Date.now() - warmedAt < 60000) { return; }
+    warmedAt = Date.now();
+    fetch("/batch/warm").catch(function () {});
+  }
 
   // Busy button.
   ["check-form", "batch-form"].forEach(function (id) {
     var form = $(id);
     if (!form) { return; }
     form.addEventListener("submit", function (e) {
+      if (preparing) { e.preventDefault(); return; }
+      var total = chosen.reduce(function (s, f) { return s + f.size; }, 0);
+      var sheet = $("spreadsheet");
+      if (sheet && sheet.files.length) { total += sheet.files[0].size; }
+      if (total > UPLOAD_LIMIT) {
+        e.preventDefault();
+        var big = document.getElementById("size-error");
+        if (!big) {
+          big = document.createElement("p");
+          big.id = "size-error"; big.className = "error"; big.setAttribute("role", "alert");
+          ($("drop") || form).insertAdjacentElement("afterend", big);
+        }
+        big.textContent = "These files add up to " + Math.round(total / 1048576) + " MB. One upload can take up to " +
+          "30 MB (about 60 phone photos, or a few hundred label image files). Split them into smaller batches.";
+        return;
+      }
       if (id === "check-form") {
         var brand = $("brand_name");
         if (brand && !brand.value.trim()) {

@@ -70,3 +70,28 @@ def test_unset_means_everything_runs_here(monkeypatch):
     assert client.get("/batch/warm").json() == {"ok": True}
     assert client.get("/batch").status_code == 200
     assert client.get("/batch/nope").status_code == 404
+
+
+def test_opening_the_batch_page_does_not_wake_the_backend(forwarded):
+    seen, client = forwarded
+    r = client.get("/batch")
+    assert r.status_code == 200 and 'id="batch-form"' in r.text
+    assert seen == []
+
+
+def test_warm_call_only_fires_after_files_are_picked():
+    from pathlib import Path
+    END = chr(10) + "  }" + chr(10)
+    js = (Path(__file__).resolve().parents[1] / "app" / "static" / "app.js").read_text(encoding="utf-8")
+    # The only warm call lives inside warmBatch, which add() calls once picked files are ready.
+    assert js.count('fetch("/batch/warm")') == 1
+    body = js.split("function warmBatch()")[1].split(END)[0]
+    assert 'fetch("/batch/warm")' in body and "chosen.length" in body
+    assert js.count("warmBatch()") == 2  # its definition and the call inside add()
+    assert "warmBatch();" in js.split("function add(files)")[1].split(END)[0]
+
+
+def test_big_photos_are_shrunk_before_upload_and_keep_their_names():
+    from pathlib import Path
+    js = (Path(__file__).resolve().parents[1] / "app" / "static" / "app.js").read_text(encoding="utf-8")
+    assert "new File([b], f.name" in js and "UPLOAD_LIMIT" in js
