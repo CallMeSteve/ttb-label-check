@@ -55,7 +55,7 @@ Where a vision-language model would help next is badly photographed labels, wher
 - Up to 4 pictures per application, and up to 300 applications per batch.
 - One product type per batch unless the spreadsheet says otherwise.
 - Pictures are not stored.
-- Pictures are JPG, PNG or WEBP and under 15 MB each. A batch is under 400 MB.
+- Pictures are JPG, PNG or WEBP and under 15 MB each. The app allows a 400 MB batch; the hosted copy takes about 30 MB per upload, and the browser shrinks big photos to 2000 px first so most batches fit.
 
 ## Trade-offs and limits
 

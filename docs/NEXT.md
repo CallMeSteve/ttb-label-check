@@ -2,7 +2,7 @@
 
 Things I left out on purpose (amended spec) or noticed and did not build.
 
-- Real approved labels from the Public COLA Registry as a false-alarm set.
+- More real approved labels from the Public COLA Registry, including every panel of each record, and real phone photos of bottles.
 - Name and address matching against form item 8. The single-check form has no field for it.
 - A shared cache for a back label that repeats across a batch.
 - Same-field-of-vision check for spirits (27 CFR 5.63(a)).

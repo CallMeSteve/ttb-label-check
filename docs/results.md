@@ -104,12 +104,14 @@ Known limit: the app does not decide whether GOVERNMENT WARNING: is bold and the
 
 TTB approved these, so any "Doesn't follow the rule" or disagreement is a false alarm. "After" types only what each record's application page holds (product type, source, brand, fanciful name; the form has no class, alcohol or net contents box), see `labels/real-cola/SOURCES.md`. "Before" is the live app on 2026-10-11, before the changes to the warning, class and net contents checks; that run also typed class, alcohol and net contents values that were guessed, not taken from the record.
 
+"After" is run with the hosted settings (`OCR_DET_MAX_SIDE=1280`), so it shows what the public URL returns.
+
 | Label | Before (non-matching rows) | After (non-matching rows) |
 |---|---|---|
 | old-elk | Government warning: Doesn't follow the rule. Net contents: Look at this. | Fanciful name: Look at this; Net contents: Look at this |
-| jeffersons-ocean | Class or type: disagree (picked the 'BOTTLED FOR JEFFERSON'S' line). Alcohol content and Name and address: Not on the label. Net contents: Look at this. Government warning: Doesn't follow the rule. | Alcohol content: Not on the label; Net contents: Look at this |
+| jeffersons-ocean | Class or type: disagree (picked the 'BOTTLED FOR JEFFERSON'S' line). Alcohol content and Name and address: Not on the label. Net contents: Look at this. Government warning: Doesn't follow the rule. | Alcohol content: Not on the label; Net contents: Look at this; Government warning: Look at this |
 | woodford-reserve | Class or type: disagree (picked 'THIS EXCEPTIONAL BOURBON HAS BEEN CRAFTED'). Alcohol content: Not on the label. Net contents: Look at this. Government warning: Doesn't follow the rule. | Fanciful name: Look at this; Alcohol content: Not on the label; Net contents: Look at this |
 | laurel-glen | Class or type: disagree (picked '2023 RED WINE BLEND'). Government warning: Doesn't follow the rule. | all rows Match |
 | common-roots | Brand name: disagree. Name and address: Not on the label. Government warning: Doesn't follow the rule. | Brand name: Look at this; Government warning: Look at this |
 
-Known limits seen on these labels: small or curved text (the alcohol statement on two labels) is sometimes not read at all, and the row then says "Not on the label". The net contents row is Look at this when the amount is molded into the glass. Where the warning has a letter or two the reader isn't sure of, the row is Look at this with the crop and the word shown.
+Known limits seen on these labels: the Jefferson's and Woodford pictures in the record carry no alcohol statement at all (it is on a panel or strip that is not in those two images), so "Not on the label" is the correct answer for the pictures given. The net contents row is Look at this when the amount is molded into the glass. Where the warning has a letter or two the reader isn't sure of, the row is Look at this with the crop and the word shown.

@@ -58,6 +58,8 @@ lines += [
     "see `labels/real-cola/SOURCES.md`. \"Before\" is the live app on 2026-10-11, before the changes to the warning, class and "
     "net contents checks; that run also typed class, alcohol and net contents values that were guessed, not taken from the record.",
     "",
+    "\"After\" is run with the hosted settings (`OCR_DET_MAX_SIDE=1280`), so it shows what the public URL returns.",
+    "",
     "| Label | Before (non-matching rows) | After (non-matching rows) |",
     "|---|---|---|",
 ]
@@ -68,8 +70,9 @@ for name, c in cases.items():
     lines.append(f"| {name} | {BEFORE[name]} | {after or 'all rows Match'} |")
 lines += [
     "",
-    "Known limits seen on these labels: small or curved text (the alcohol statement on two labels) is sometimes not read at all, "
-    "and the row then says \"Not on the label\". The net contents row is Look at this when the amount is molded into the glass. "
+    "Known limits seen on these labels: the Jefferson's and Woodford pictures in the record carry no alcohol statement at all "
+    "(it is on a panel or strip that is not in those two images), so \"Not on the label\" is the correct answer for the pictures "
+    "given. The net contents row is Look at this when the amount is molded into the glass. "
     "Where the warning has a letter or two the reader isn't sure of, the row is Look at this with the crop and the word shown.",
     "",
 ]

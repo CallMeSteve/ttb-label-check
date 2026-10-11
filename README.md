@@ -17,7 +17,7 @@ The sample pictures are in `labels/try-these/`. Each numbered folder holds a fro
 
 The full set of 25 rendered cases, with the degraded copies, lives in `labels/all-test-cases/`. Every case with its expected and actual result, misses included, is in `docs/results.md`. The bold-check limit is explained in "What I found in the regulations" and in `APPROACH.md`.
 
-A free host would sleep when idle. This one is meant to stay awake, so checks should take a few seconds from the first request.
+A free host would sleep when idle. The single-check service here stays awake, so checks take a few seconds from the first request. The batch service sleeps when no one is using it and wakes when you pick files, so the first batch after a quiet spell can take a little longer to start.
 
 ## What it checks
 
@@ -77,7 +77,7 @@ I rendered 25 labels in code with real regular and bold fonts, so the right answ
 
 I also degraded the clean label and the title-case label five ways: rotated 8 degrees, perspective skew, glare, Gaussian blur at 1.5, and JPEG at quality 40. All 12 rows kept their result in every case. The test that matters is that a degraded picture never shows Matches where the clean one doesn't, and it passes. These degradations are mild. A phone photo with heavy glare over the warning would do worse, and the app would say "Look at this" or "couldn't read" before it said Matches.
 
-I did not run real approved labels from the Public COLA Registry. That is the first thing I'd add.
+I also ran five real approved labels from the Public COLA Registry (`labels/real-cola/`, sources in `labels/real-cola/SOURCES.md`, results in `docs/results.md`). None of them gets a rule failure; where the reader is unsure, or the picture lacks a statement, the row says Look at this or Not on the label.
 
 ## What I didn't build
 
@@ -111,13 +111,13 @@ pytest
 
 To regenerate the labels: `python labels/make_labels.py`, and the batch files: `python labels/make_batch.py`.
 
-The same image runs on Azure App Service for Containers or Azure Container Apps. On Azure it stays one copy that does everything (`scripts/deploy_azure.ps1` deploys it). For App Service: `az webapp create --resource-group <group> --plan <plan> --name <app> --deployment-container-image-name ghcr.io/callmesteve/ttb-label-check:latest`, with the setting `WEBSITES_PORT=8000`.
+The same image runs on Azure App Service for Containers or Azure Container Apps. On Azure it stays one copy that does everything. `scripts/deploy_azure.ps1` is written for that, but it has not been run end to end yet: the Azure subscription's Container Apps service was still being activated when I submitted. For App Service: `az webapp create --resource-group <group> --plan <plan> --name <app> --deployment-container-image-name ghcr.io/callmesteve/ttb-label-check:latest`, with the setting `WEBSITES_PORT=8000`.
 
 Network use: the app talks to one address, the one you open it from. If your network lets you load the page, every feature works, because there is nothing else for it to reach. The text reading runs inside the app. A test in the repo runs a full check with outbound network access blocked.
 
 Versions: Python 3.12, rapidocr 3.10.0, onnxruntime 1.31.0. Models: whatever RapidOCR 3.10.0 installs by default (PP-OCRv6 small detection and recognition).
 
-Built on: Google Cloud Run in us-central1, as two services from one image, each 4 vCPU and 8 GiB. The front service handles single checks. The batch service runs as a single instance because batch jobs live in memory. The Azure Container Apps script, `scripts/deploy_azure.ps1`, runs the same image as one copy.
+Built on: Google Cloud Run in us-central1, as two services from one image, each 4 vCPU and 8 GiB. The front service handles single checks. The batch service runs as a single instance because batch jobs live in memory. The Azure Container Apps script, `scripts/deploy_azure.ps1`, deploys the same image as one copy (not yet run end to end; see above).
 
 ## Questions I'd ask next
 

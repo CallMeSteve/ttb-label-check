@@ -21,6 +21,8 @@ CASES = [
     # A liqueur named after its base spirit has no 40% class minimum.
     (S, ["Bourbon Cream Liqueur", "17% Alc./Vol. (34 Proof)"], "", Status.MATCH, ""),
     (S, ["Whiskey Cordial", "30% Alc./Vol."], "", Status.MATCH, ""),
+    (S, ["Sloe Gin", "26% Alc./Vol."], "", Status.MATCH, ""),
+    (S, ["Peppermint Schnapps", "30% Alc./Vol."], "", Status.MATCH, ""),
     (S, ["Bourbon Whiskey"], "", Status.MISSING, ""),
     ("wine", ["Red Table Wine", "Alc. 15% by vol."], "", Status.DISAGREE, "14%"),
     ("wine", ["Red Table Wine"], "", Status.MATCH, "Not required"),
