@@ -33,8 +33,8 @@ $appExists = & $az containerapp show -n $App -g $Rg --query name -o tsv 2>$null
 if (-not $appExists) {
   & $az containerapp create -n $App -g $Rg --environment $Env --image "$Acr.azurecr.io/${App}:$tag" `
     --registry-server "$Acr.azurecr.io" --registry-identity system `
-    --target-port 8000 --ingress external --cpu 2 --memory 4Gi --min-replicas 1 --max-replicas 1 `
-    --env-vars OCR_THREADS=2 BATCH_WORKERS=1 -o none
+    --target-port 8000 --ingress external --cpu 4 --memory 8Gi --min-replicas 1 --max-replicas 1 `
+    --env-vars OCR_THREADS=4 BATCH_WORKERS=1 OCR_DET_MAX_SIDE=1280 CHECK_TIME_LIMIT=30 -o none
 } else {
   & $az containerapp update -n $App -g $Rg --image "$Acr.azurecr.io/${App}:$tag" -o none
 }
