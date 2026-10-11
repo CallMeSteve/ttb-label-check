@@ -45,6 +45,23 @@ def single(client: httpx.Client, url: str, repeats: int) -> list[float]:
     return times
 
 
+EXAMPLE = dict(product_type="spirits", source="domestic", brand_name="OLD TOM DISTILLERY",
+               class_type="Kentucky Straight Bourbon Whisky", alcohol_content="45% Alc./Vol. (90 Proof)", net_contents="750 mL")
+
+
+def one_case(client: httpx.Client, url: str, folder: Path, repeats: int) -> list[float]:
+    """The same front and back pair, with the Old Tom example values, posted `repeats` times."""
+    files = [("images", (n, (folder / n).read_bytes(), "image/png")) for n in ("front.png", "back.png")]
+    times: list[float] = []
+    for _ in range(repeats):
+        t = time.perf_counter()
+        r = client.post(f"{url}/check", data=EXAMPLE, files=files)
+        times.append(time.perf_counter() - t)
+        if r.status_code != 200 or "Nothing for you to look at" not in r.text:
+            sys.exit(f"HTTP {r.status_code}, unexpected result after {times[-1]:.1f} s")
+    return times
+
+
 def batch(client: httpx.Client, url: str, zip_path: Path, csv_path: Path | None) -> tuple[float, int]:
     files = [("images", (zip_path.name, zip_path.read_bytes(), "application/zip"))]
     if csv_path:
@@ -69,20 +86,22 @@ def main() -> None:
     ap.add_argument("--url", required=True)
     ap.add_argument("--host", default="", help="short description of the machine, for the table")
     ap.add_argument("--repeats", type=int, default=3)
+    ap.add_argument("--case", type=Path, help="a folder with front.png and back.png; measures only that pair")
     ap.add_argument("--batch", type=Path)
     ap.add_argument("--csv", type=Path)
     a = ap.parse_args()
     url = a.url.rstrip("/")
     with httpx.Client(timeout=300) as client:
         client.get(f"{url}/health")
-        times = single(client, url, a.repeats)
+        times = one_case(client, url, a.case, a.repeats) if a.case else single(client, url, a.repeats)
         lines = [
             "# Latency",
             "",
             f"Measured {dt.datetime.now().strftime('%Y-%m-%d %H:%M')} against {url}"
             + (f" ({a.host})" if a.host else "") + ".",
             "",
-            "Single check, front and back picture, wall time as the browser would see it.",
+            "Single check, front and back picture, wall time as the browser would see it"
+            + (f" ({a.case.name}, Old Tom example values)." if a.case else "."),
             "",
             "| Checks | p50 | p95 | max |",
             "|---|---|---|---|",

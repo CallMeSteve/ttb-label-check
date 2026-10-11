@@ -65,6 +65,9 @@
     });
   }
 
+  // Wake whatever does the batch work while the person picks their files.
+  if ($("batch-form")) { fetch("/batch/warm").catch(function () {}); }
+
   // Busy button.
   ["check-form", "batch-form"].forEach(function (id) {
     var form = $(id);

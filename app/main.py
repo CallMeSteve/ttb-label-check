@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from types import SimpleNamespace
 
+import httpx
 from fastapi import FastAPI, Request, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse, RedirectResponse, Response
@@ -111,6 +112,40 @@ async def check(request: Request):
         log.exception("check failed")
         return again(error="Something went wrong on our side. Your picture wasn't saved. Try again.", code=500)
     return render(request, "result.html", outcome=outcome, application=application, batch_link=None)
+
+
+# When BATCH_BACKEND_URL is set, every /batch request is passed on to that address, so batch work runs in a
+# second copy of this app. The browser only ever talks to this one. Unset, nothing here runs.
+_backend_transport: httpx.AsyncBaseTransport | None = None  # tests put a mock here
+_HOP = {"connection", "keep-alive", "proxy-authenticate", "proxy-authorization", "te", "trailers",
+        "transfer-encoding", "upgrade", "host"}
+
+
+@app.middleware("http")
+async def forward_batch(request: Request, call_next):
+    base = os.environ.get("BATCH_BACKEND_URL", "").rstrip("/")
+    path = request.url.path
+    if not base or not (path == "/batch" or path.startswith("/batch/")):
+        return await call_next(request)
+    target = base + ("/health" if path == "/batch/warm" else path)
+    if request.url.query:
+        target += "?" + request.url.query
+    headers = {k: v for k, v in request.headers.items() if k.lower() not in _HOP}
+    try:
+        async with httpx.AsyncClient(transport=_backend_transport, timeout=300) as client:
+            sent = client.build_request(request.method, target, headers=headers, content=request.stream())
+            reply = await client.send(sent)
+    except httpx.HTTPError:
+        log.exception("batch backend unreachable")
+        return PlainTextResponse("Something went wrong on our side. Nothing was saved. Try again.", status_code=502)
+    out = {k: v for k, v in reply.headers.items()
+           if k.lower() not in _HOP and k.lower() not in ("content-length", "content-encoding")}
+    return Response(reply.content, status_code=reply.status_code, headers=out)
+
+
+@app.get("/batch/warm")
+def batch_warm():
+    return {"ok": True}
 
 
 @app.get("/batch", response_class=HTMLResponse)

@@ -4,7 +4,7 @@ Label Check compares an alcohol label to its application and shows you where to 
 
 ## Try it
 
-Live app: https://treasurylabels.abdullah-sarwar.com (TODO(Abdullah): confirm it is live). Alternate link: TODO(Abdullah): the azurecontainerapps.io address.
+Live app: https://treasurylabels.abdullah-sarwar.com.
 
 The sample pictures are in `labels/try-these/`. Each numbered folder holds a front and back picture and a `WHAT-TO-DO.txt` that says what to type and what you should see:
 
@@ -111,13 +111,13 @@ pytest
 
 To regenerate the labels: `python labels/make_labels.py`, and the batch files: `python labels/make_batch.py`.
 
-The same image runs on Azure App Service for Containers or Azure Container Apps. For App Service: `az webapp create --resource-group <group> --plan <plan> --name <app> --deployment-container-image-name ghcr.io/callmesteve/ttb-label-check:latest`, with the setting `WEBSITES_PORT=8000`.
+The same image runs on Azure App Service for Containers or Azure Container Apps. On Azure it stays one copy that does everything (`scripts/deploy_azure.ps1` deploys it). For App Service: `az webapp create --resource-group <group> --plan <plan> --name <app> --deployment-container-image-name ghcr.io/callmesteve/ttb-label-check:latest`, with the setting `WEBSITES_PORT=8000`.
 
 Network use: the app talks to one address, the one you open it from. If your network lets you load the page, every feature works, because there is nothing else for it to reach. The text reading runs inside the app. A test in the repo runs a full check with outbound network access blocked.
 
 Versions: Python 3.12, rapidocr 3.10.0, onnxruntime 1.31.0. Models: whatever RapidOCR 3.10.0 installs by default (PP-OCRv6 small detection and recognition).
 
-Built on: TODO(Abdullah): the hosting facts you want to state (region, plan).
+Built on: Google Cloud Run in us-central1, as two services from one image, each 4 vCPU and 8 GiB. The front service handles single checks. The batch service runs as a single instance because batch jobs live in memory. The Azure Container Apps script, `scripts/deploy_azure.ps1`, runs the same image as one copy.
 
 ## Questions I'd ask next
 

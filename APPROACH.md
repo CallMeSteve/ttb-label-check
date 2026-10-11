@@ -68,6 +68,10 @@ Where a vision-language model would help next is badly photographed labels, wher
 - Batch throughput is limited by CPU. On my PC, 150 applications took 165 s with 4 workers.
 - Rendered labels are clean by construction. They show the rules work. They do not show the reader works on every label in the world.
 
+## Hosting
+
+The public copy runs as two Cloud Run services built from the same image. The front service takes single checks and bills only while a request is running. The batch service keeps its CPU on, because a batch keeps working after the page has been sent, and it runs as one instance because jobs live in memory. Keeping a 4 vCPU container always on for single checks too would cost about $7.60 a day. Splitting them comes to about $1 to $2 a day. When `BATCH_BACKEND_URL` is set, the front service passes every `/batch` request on to the batch service, so the browser still talks to one address. That call, from the front service to its own batch service, is the only outbound call the app makes, and it exists only when the setting is present. Left unset, as on Azure or a laptop, one copy does everything.
+
 ## Latency work
 
 I measured the reader on my PC before building the pages. A two-picture check took 2.5 s on one ONNX thread, 1.8 s on two, 1.5 s on four and 1.3 s on eight. Shrinking text detection to 1280 px on the long edge saved about 10 percent and kept all rendered cases correct, so it is off by default and available as `OCR_DET_MAX_SIDE`. The batch workers use one thread each, because the pool already supplies parallel work. The engine loads once at start-up and runs a warm-up read, so the first request is not the slow one.
