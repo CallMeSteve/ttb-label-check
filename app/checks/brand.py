@@ -4,11 +4,18 @@ from ..align import find_span
 from ..models import Application, CheckResult, Line, Part, Status, combine
 from ..normalize import squash_ws
 from ..rules_data import BRAND_CASE_RULES
+from ..rules_data import NAME_ADDRESS_PHRASES
 from .common import biggest_text
 
 
+def _is_producer_line(text: str) -> bool:
+    low = " ".join(text.lower().split())
+    return any(p in low for p in NAME_ADDRESS_PHRASES)
+
+
 def _name_check(item: str, given: str, app: Application, lines: list[Line]) -> CheckResult:
-    span = find_span(given, lines)
+    # The producer's own name in 'Bottled by ...' is not the brand on the front of the label.
+    span = find_span(given, [ln for ln in lines if not _is_producer_line(ln.text)])
     big = biggest_text(lines)
     big_note = f" Biggest text on the label: '{big.text}'." if big else ""
     rule = BRAND_CASE_RULES[app.product_type]

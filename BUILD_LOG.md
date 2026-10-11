@@ -2,3 +2,4 @@
 
 - 2026-10-11 10:30 ET: scaffold, fonts, models, normalize, align, rules_data, brand and alcohol checks written. Tests 0 so far. No Docker on this PC (cannot run docker build here).
 - 2026-10-11 11:00 ET: §14 row 2 done (all checks + rule tests). 55 tests passing.
+- 2026-10-11 12:00 ET: §14 row 3 done (label generator, 35 rendered cases, end-to-end + degraded tests). 117 tests passing. OCR warm ~1.0-1.6 s per two-image check on this PC (see docs/latency.md later).

@@ -1,0 +1,509 @@
+{
+ "old_tom_clean": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY",
+   "class_type": "Kentucky Straight Bourbon Whisky",
+   "alcohol_content": "45% Alc./Vol. (90 Proof)",
+   "net_contents": "750 mL"
+  },
+  "expect": {
+   "Brand name": "MATCH",
+   "Class or type": "MATCH",
+   "Alcohol content": "MATCH",
+   "Net contents": "MATCH",
+   "Name and address": "MATCH",
+   "Government warning": "MATCH"
+  },
+  "images": [
+   "old_tom_clean_front.png",
+   "old_tom_clean_back.png"
+  ]
+ },
+ "old_tom_clean_rot8": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY",
+   "class_type": "Kentucky Straight Bourbon Whisky",
+   "alcohol_content": "45% Alc./Vol. (90 Proof)",
+   "net_contents": "750 mL"
+  },
+  "expect": {},
+  "base": "old_tom_clean",
+  "images": [
+   "old_tom_clean_rot8_front.png",
+   "old_tom_clean_rot8_back.png"
+  ]
+ },
+ "old_tom_clean_persp": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY",
+   "class_type": "Kentucky Straight Bourbon Whisky",
+   "alcohol_content": "45% Alc./Vol. (90 Proof)",
+   "net_contents": "750 mL"
+  },
+  "expect": {},
+  "base": "old_tom_clean",
+  "images": [
+   "old_tom_clean_persp_front.png",
+   "old_tom_clean_persp_back.png"
+  ]
+ },
+ "old_tom_clean_glare": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY",
+   "class_type": "Kentucky Straight Bourbon Whisky",
+   "alcohol_content": "45% Alc./Vol. (90 Proof)",
+   "net_contents": "750 mL"
+  },
+  "expect": {},
+  "base": "old_tom_clean",
+  "images": [
+   "old_tom_clean_glare_front.png",
+   "old_tom_clean_glare_back.png"
+  ]
+ },
+ "old_tom_clean_blur": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY",
+   "class_type": "Kentucky Straight Bourbon Whisky",
+   "alcohol_content": "45% Alc./Vol. (90 Proof)",
+   "net_contents": "750 mL"
+  },
+  "expect": {},
+  "base": "old_tom_clean",
+  "images": [
+   "old_tom_clean_blur_front.png",
+   "old_tom_clean_blur_back.png"
+  ]
+ },
+ "old_tom_clean_jpeg40": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY",
+   "class_type": "Kentucky Straight Bourbon Whisky",
+   "alcohol_content": "45% Alc./Vol. (90 Proof)",
+   "net_contents": "750 mL"
+  },
+  "expect": {},
+  "base": "old_tom_clean",
+  "images": [
+   "old_tom_clean_jpeg40_front.jpg",
+   "old_tom_clean_jpeg40_back.jpg"
+  ]
+ },
+ "stones_throw_case": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "Stone's Throw"
+  },
+  "expect": {
+   "Brand name": "MATCH"
+  },
+  "images": [
+   "stones_throw_case_front.png",
+   "stones_throw_case_back.png"
+  ]
+ },
+ "stones_throw_curly": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "STONES THROW"
+  },
+  "expect": {
+   "Brand name": "MATCH"
+  },
+  "images": [
+   "stones_throw_curly_front.png",
+   "stones_throw_curly_back.png"
+  ]
+ },
+ "brand_extra_letter": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Brand name": "DISAGREE"
+  },
+  "images": [
+   "brand_extra_letter_front.png",
+   "brand_extra_letter_back.png"
+  ]
+ },
+ "warn_title_case": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Government warning": "DISAGREE"
+  },
+  "images": [
+   "warn_title_case_front.png",
+   "warn_title_case_back.png"
+  ]
+ },
+ "warn_title_case_rot8": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {},
+  "base": "warn_title_case",
+  "images": [
+   "warn_title_case_rot8_front.png",
+   "warn_title_case_rot8_back.png"
+  ]
+ },
+ "warn_title_case_persp": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {},
+  "base": "warn_title_case",
+  "images": [
+   "warn_title_case_persp_front.png",
+   "warn_title_case_persp_back.png"
+  ]
+ },
+ "warn_title_case_glare": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {},
+  "base": "warn_title_case",
+  "images": [
+   "warn_title_case_glare_front.png",
+   "warn_title_case_glare_back.png"
+  ]
+ },
+ "warn_title_case_blur": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {},
+  "base": "warn_title_case",
+  "images": [
+   "warn_title_case_blur_front.png",
+   "warn_title_case_blur_back.png"
+  ]
+ },
+ "warn_title_case_jpeg40": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {},
+  "base": "warn_title_case",
+  "images": [
+   "warn_title_case_jpeg40_front.jpg",
+   "warn_title_case_jpeg40_back.jpg"
+  ]
+ },
+ "warn_reworded": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Government warning": "DISAGREE"
+  },
+  "images": [
+   "warn_reworded_front.png",
+   "warn_reworded_back.png"
+  ]
+ },
+ "warn_missing_2": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Government warning": "DISAGREE"
+  },
+  "images": [
+   "warn_missing_2_front.png",
+   "warn_missing_2_back.png"
+  ]
+ },
+ "warn_header_regular": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Government warning": "MATCH"
+  },
+  "images": [
+   "warn_header_regular_front.png",
+   "warn_header_regular_back.png"
+  ]
+ },
+ "warn_all_bold": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Government warning": "MATCH"
+  },
+  "images": [
+   "warn_all_bold_front.png",
+   "warn_all_bold_back.png"
+  ]
+ },
+ "warn_missing": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Government warning": "MISSING"
+  },
+  "images": [
+   "warn_missing_front.png",
+   "warn_missing_back.png"
+  ]
+ },
+ "proof_mismatch": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Alcohol content": "DISAGREE"
+  },
+  "images": [
+   "proof_mismatch_front.png",
+   "proof_mismatch_back.png"
+  ]
+ },
+ "abv_app_mismatch": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY",
+   "alcohol_content": "40"
+  },
+  "expect": {
+   "Alcohol content": "DISAGREE"
+  },
+  "images": [
+   "abv_app_mismatch_front.png",
+   "abv_app_mismatch_back.png"
+  ]
+ },
+ "abv_written_ABV": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Alcohol content": "LOOK"
+  },
+  "images": [
+   "abv_written_ABV_front.png",
+   "abv_written_ABV_back.png"
+  ]
+ },
+ "rum_35": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Alcohol content": "DISAGREE"
+  },
+  "images": [
+   "rum_35_front.png",
+   "rum_35_back.png"
+  ]
+ },
+ "whisky_spelling": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY",
+   "class_type": "Kentucky Straight Bourbon Whisky"
+  },
+  "expect": {
+   "Class or type": "MATCH"
+  },
+  "images": [
+   "whisky_spelling_front.png",
+   "whisky_spelling_back.png"
+  ]
+ },
+ "class_drops_straight": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY",
+   "class_type": "Straight Bourbon Whiskey"
+  },
+  "expect": {
+   "Class or type": "DISAGREE"
+  },
+  "images": [
+   "class_drops_straight_front.png",
+   "class_drops_straight_back.png"
+  ]
+ },
+ "spirits_700ml": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Net contents": "MATCH"
+  },
+  "images": [
+   "spirits_700ml_front.png",
+   "spirits_700ml_back.png"
+  ]
+ },
+ "spirits_600ml": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Net contents": "DISAGREE"
+  },
+  "images": [
+   "spirits_600ml_front.png",
+   "spirits_600ml_back.png"
+  ]
+ },
+ "spirits_floz_only": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Net contents": "DISAGREE"
+  },
+  "images": [
+   "spirits_floz_only_front.png",
+   "spirits_floz_only_back.png"
+  ]
+ },
+ "beer_ml_only": {
+  "application": {
+   "product_type": "malt",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Net contents": "DISAGREE"
+  },
+  "images": [
+   "beer_ml_only_front.png",
+   "beer_ml_only_back.png"
+  ]
+ },
+ "beer_12oz_no_abv": {
+  "application": {
+   "product_type": "malt",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Net contents": "MATCH",
+   "Alcohol content": "MATCH"
+  },
+  "images": [
+   "beer_12oz_no_abv_front.png",
+   "beer_12oz_no_abv_back.png"
+  ]
+ },
+ "table_wine_15": {
+  "application": {
+   "product_type": "wine",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Alcohol content": "DISAGREE"
+  },
+  "images": [
+   "table_wine_15_front.png",
+   "table_wine_15_back.png"
+  ]
+ },
+ "table_wine_no_abv": {
+  "application": {
+   "product_type": "wine",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Alcohol content": "MATCH"
+  },
+  "images": [
+   "table_wine_no_abv_front.png",
+   "table_wine_no_abv_back.png"
+  ]
+ },
+ "net_missing": {
+  "application": {
+   "product_type": "spirits",
+   "source": "domestic",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Net contents": "LOOK"
+  },
+  "images": [
+   "net_missing_front.png",
+   "net_missing_back.png"
+  ]
+ },
+ "import_no_importer": {
+  "application": {
+   "product_type": "spirits",
+   "source": "imported",
+   "brand_name": "OLD TOM DISTILLERY"
+  },
+  "expect": {
+   "Name and address": "LOOK"
+  },
+  "images": [
+   "import_no_importer_front.png",
+   "import_no_importer_back.png"
+  ]
+ }
+}
