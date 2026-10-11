@@ -98,7 +98,7 @@ button[disabled] { opacity: .7; cursor: wait; }
 .row .hint { color: var(--accent); font-size: .85rem; text-decoration: underline; }
 .row .body { padding: 0 1rem 1rem; }
 .says { font-size: 1.1rem; margin: .25rem 0; word-break: break-word; }
-.says span { color: var(--muted); font-size: .85rem; display: inline-block; min-width: 8.5rem; }
+.says span { color: var(--muted); font-size: .85rem; display: block; }
 .reason { margin: .5rem 0; }
 .crop { display: block; max-width: 100%; margin: .5rem 0; border: 1px solid var(--line); border-radius: 4px; }
 .confirm { margin: .5rem 0; padding: .5rem .8rem; background: #fff; border: 2px solid var(--look); border-radius: 6px; }
@@ -117,5 +117,4 @@ button[disabled] { opacity: .7; cursor: wait; }
 code { background: var(--info-bg); padding: 0 .25rem; border-radius: 3px; }
 @media (max-width: 520px) {
   html { font-size: 18px; }
-  .says span { display: block; }
 }

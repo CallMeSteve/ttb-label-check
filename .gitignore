@@ -5,3 +5,6 @@ __pycache__/
 *.pyc
 scratch/
 
+labels/batch/
+scratch_server.log
+.playwright-mcp/

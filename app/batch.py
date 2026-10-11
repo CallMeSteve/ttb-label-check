@@ -71,6 +71,8 @@ _pool: ProcessPoolExecutor | None = None
 
 
 def _init_worker() -> None:
+    # The pool supplies the parallelism, so each worker reads with one thread unless told otherwise.
+    os.environ["OCR_THREADS"] = os.environ.get("BATCH_OCR_THREADS", "1")
     from .ocr import get_engine
 
     get_engine()

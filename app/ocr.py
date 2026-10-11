@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import io
+import os
 import threading
 
 import numpy as np
@@ -14,11 +15,20 @@ _lock = threading.Lock()
 
 
 def get_engine():
+    """One engine per process. OCR_THREADS and OCR_DET_MAX_SIDE tune speed on a slow host (defaults: off)."""
     global _engine
     if _engine is None:
         from rapidocr import RapidOCR
 
-        _engine = RapidOCR()
+        threads = int(os.environ.get("OCR_THREADS", "0"))
+        params: dict = {}
+        if threads > 0:
+            params["EngineConfig.onnxruntime.intra_op_num_threads"] = threads
+        # Spec section 9, step (a): a smaller detection size if the host is slow.
+        side = int(os.environ.get("OCR_DET_MAX_SIDE", "0"))
+        if side > 0:
+            params.update({"Det.limit_type": "max", "Det.limit_side_len": side})
+        _engine = RapidOCR(params=params or None)
     return _engine
 
 

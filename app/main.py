@@ -204,6 +204,11 @@ def batch_item(request: Request, job_id: str, n: int):
                   batch_link=f"/batch/{job_id}", item=item)
 
 
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return Response(status_code=204)
+
+
 @app.get("/help", response_class=HTMLResponse)
 def help_page(request: Request):
     return render(request, "help.html")
