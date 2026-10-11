@@ -56,6 +56,10 @@ def class_minimum(key: str | None, lines: list[Line]) -> float | None:
 
     if key is None or key not in CLASS_MINIMUMS:
         return None
+    # A liqueur or cordial named after a base spirit ("Bourbon Cream Liqueur") has no 40% minimum.
+    folded = [" " + fold_whisky(ln.text) + " " for ln in lines]
+    if any(" LIQUEUR " in t or " CORDIAL " in t for t in folded):
+        return None
     if any(" FLAVORED " in " " + fold_whisky(ln.text) + " " for ln in lines):
         return FLAVORED_MINIMUM
     return CLASS_MINIMUMS[key]

@@ -41,7 +41,8 @@ def find_abv(lines: list[Line]) -> AbvFound | None:
             context = before + " " + after
             has_std = "alc" in context or "vol" in context
             has_abv = bool(re.search(r"\babv\b", context))
-            if not has_std and not has_abv and _NOT_ALCOHOL.match(text[m.end():m.end() + 14]):
+            # "100% Agave", "51% corn" and the like describe ingredients, even when Alc./Vol. sits close by.
+            if _NOT_ALCOHOL.match(text[m.end():m.end() + 14]):
                 continue
             form = "abv" if has_abv and not has_std else "standard" if has_std else "bare"
             start = max(0, m.start() - 22) if has_std else m.start()

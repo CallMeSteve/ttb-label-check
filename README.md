@@ -67,7 +67,7 @@ Measured with `scripts/measure_latency.py`, which writes `docs/latency.md`.
 | Where | Single check (front and back), p50 / p95 / max | Batch |
 |---|---|---|
 | My Windows PC, 32 logical cores, 2026-10-11 | 1.22 s / 1.31 s / 1.89 s (75 checks) | 150 applications (300 pictures) in 165 s |
-| Public URL | TODO(Abdullah): run `python scripts/measure_latency.py --url <public URL>` after deploy and paste the table | TODO(Abdullah): same run with `--batch labels/batch/batch_300.zip --csv labels/batch/batch_300.csv` |
+| Public URL (Google Cloud Run, 4 vCPU), 2026-10-11 | 2.20 s / 2.49 s / 2.49 s (10 checks) | 150 applications (300 pictures) in 266 s, 4 batch workers |
 
 On one thread a two-picture check takes about 2.5 s on my PC, and about 1.8 s on two threads. A small cloud container will land closer to the one and two thread numbers. `OCR_THREADS` sets the ONNX thread count and `OCR_DET_MAX_SIDE=1280` shrinks the text detection size if a host is slow.
 
@@ -100,7 +100,7 @@ docker build -t label-check .
 docker run -p 8000:8000 label-check
 ```
 
-Then open http://localhost:8000. The container listens on `$PORT` if it is set. `/health` (also `/healthz`) reports the text reader's warm-up time. A check that runs past `CHECK_TIME_LIMIT` seconds (default 10) returns the "taking too long" message with status 503.
+Then open http://localhost:8000. The container listens on `$PORT` if it is set. `/health` (`/healthz` also answers on a local copy; Cloud Run reserves that path) reports the text reader's warm-up time. A check that runs past `CHECK_TIME_LIMIT` seconds (default 10) returns the "taking too long" message with status 503.
 
 To run the tests:
 

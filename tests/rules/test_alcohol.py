@@ -16,6 +16,11 @@ CASES = [
     (S, ["Rum", "40% alc/vol"], "", Status.MATCH, ""),
     (S, ["Flavored Vodka", "30% alc/vol"], "", Status.MATCH, ""),
     (S, ["Tequila 100% Agave", "40% Alc./Vol."], "", Status.MATCH, ""),
+    # Found in the pre-submission review: the ingredient percent sat close enough to Alc./Vol. to be read as ABV.
+    (S, ["CASA AZUL", "100% Agave", "Tequila", "40% Alc./Vol. (80 Proof)", "750 mL"], "40%", Status.MATCH, ""),
+    # A liqueur named after its base spirit has no 40% class minimum.
+    (S, ["Bourbon Cream Liqueur", "17% Alc./Vol. (34 Proof)"], "", Status.MATCH, ""),
+    (S, ["Whiskey Cordial", "30% Alc./Vol."], "", Status.MATCH, ""),
     (S, ["Bourbon Whiskey"], "", Status.MISSING, ""),
     ("wine", ["Red Table Wine", "Alc. 15% by vol."], "", Status.DISAGREE, "14%"),
     ("wine", ["Red Table Wine"], "", Status.MATCH, "Not required"),
