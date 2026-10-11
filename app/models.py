@@ -67,10 +67,12 @@ class CheckResult:
     # Warning row only: list of (required words, label words) pairs for the differing spots.
     diff_view: list[tuple[str, str]] | None = None
     crops: list[str] = field(default_factory=list)
+    # True when the label breaks a rule by itself, even if an application value was typed.
+    rule_only: bool = False
 
     @property
     def status_text(self) -> str:
-        if self.status is Status.DISAGREE and not self.application_says:
+        if self.status is Status.DISAGREE and (not self.application_says or self.rule_only):
             return "Doesn't follow the rule"
         return self.status.value
 

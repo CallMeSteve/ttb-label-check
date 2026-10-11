@@ -110,8 +110,8 @@ def check_alcohol(app: Application, lines: list[Line]) -> CheckResult:
             if abs(proof[0] - 2 * abv.value) > 0.1:
                 parts.append(Part(
                     Status.DISAGREE,
-                    f"The label contradicts itself: {_num(abv.value)}% should be {_num(2 * abv.value)} proof, "
-                    f"label says {_num(proof[0])}.", "27 CFR 5.1, 5.65(b)(1)(i)", ev))
+                    f"The label contradicts itself: {_num(abv.value)}% Alc./Vol. is {_num(2 * abv.value)} proof, "
+                    f"but the label says {_num(proof[0])} Proof.", "27 CFR 5.1, 5.65(b)(1)(i)", ev))
         key, class_line = detect_class(lines, "spirits")
         minimum = class_minimum(key, lines)
         if minimum is not None and abv.value < minimum and class_line is not None:
@@ -122,7 +122,8 @@ def check_alcohol(app: Application, lines: list[Line]) -> CheckResult:
     if table_wine and abv.value > 14:
         parts.append(Part(Status.DISAGREE, "Table wine and light wine can't be over 14% alcohol.",
                           "27 CFR 4.21(a)(5), 4.36(a)", ev))
-    if app_val is not None and app_val != abv.value:
+    app_differs = app_val is not None and app_val != abv.value
+    if app_differs:
         parts.append(Part(Status.DISAGREE,
                           f"Application says {_num(app_val)}%, label says {_num(abv.value)}%.", None, ev))
 
@@ -131,4 +132,6 @@ def check_alcohol(app: Application, lines: list[Line]) -> CheckResult:
         if app_val is None:
             reason += " Application: not given, so only the rules were checked."
         parts.append(Part(Status.MATCH, reason, None, ev))
-    return combine("Alcohol content", parts, app_says, label_says)
+    result = combine("Alcohol content", parts, app_says, label_says)
+    result.rule_only = not app_differs
+    return result

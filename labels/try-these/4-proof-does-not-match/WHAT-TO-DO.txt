@@ -1,4 +1,4 @@
 The label says 45% Alc./Vol. but 80 Proof. Proof should be twice the percent, so it should say 90.
 1. Open Check a label and click "Fill in the Old Tom example".
 2. Add front.png and back.png from this folder, then press Check this label.
-You should see: "1 thing to look at". The Alcohol content row says "The label contradicts itself: 45% should be 90 proof, label says 80." The row heading reads "Label and application disagree" because the example has an alcohol value typed in. The other rows say Matches.
+You should see: "1 thing to look at". The Alcohol content row says "Doesn't follow the rule" and "The label contradicts itself: 45% Alc./Vol. is 90 proof, but the label says 80 Proof." The other rows say Matches.

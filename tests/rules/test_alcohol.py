@@ -8,7 +8,7 @@ S = "spirits"
 CASES = [
     # product, label lines, app alcohol, expected status, text expected in reason
     (S, ["Kentucky Straight Bourbon Whiskey", "45% Alc./Vol. (90 Proof)"], "", Status.MATCH, ""),
-    (S, ["Kentucky Straight Bourbon Whiskey", "45% Alc./Vol. (80 Proof)"], "", Status.DISAGREE, "should be 90 proof"),
+    (S, ["Kentucky Straight Bourbon Whiskey", "45% Alc./Vol. (80 Proof)"], "", Status.DISAGREE, "45% Alc./Vol. is 90 proof, but the label says 80 Proof"),
     (S, ["Bourbon Whiskey", "45% Alc./Vol."], "40", Status.DISAGREE, "Application says 40%, label says 45%"),
     (S, ["Bourbon Whiskey", "45% Alc./Vol."], "45%", Status.MATCH, ""),
     (S, ["Bourbon Whiskey", "45% ABV"], "", Status.LOOK, "ABV"),
@@ -29,3 +29,20 @@ def test_alcohol(pt, texts, app_val, status, words):
     r = check_alcohol(Application(product_type=pt, alcohol_content=app_val), mk(texts))
     assert r.status is status, r.reason
     assert words in r.reason
+
+
+def test_label_contradiction_is_not_called_an_application_disagreement():
+    app = Application(alcohol_content="45% Alc./Vol. (90 Proof)")
+    r = check_alcohol(app, mk(["Bourbon Whiskey", "45% Alc./Vol. (80 Proof)"]))
+    assert r.status_text == "Doesn't follow the rule"
+    assert r.reason == "The label contradicts itself: 45% Alc./Vol. is 90 proof, but the label says 80 Proof."
+
+
+def test_both_problems_keep_the_second_sentence():
+    r = check_alcohol(Application(alcohol_content="40"), mk(["Bourbon Whiskey", "45% Alc./Vol. (80 Proof)"]))
+    assert r.status_text == "Doesn't follow the rule" and "Application says 40%, label says 45%." in r.reason
+
+
+def test_plain_application_mismatch_keeps_its_heading():
+    r = check_alcohol(Application(alcohol_content="40"), mk(["Bourbon Whiskey", "45% Alc./Vol."]))
+    assert r.status_text == "Label and application disagree"
