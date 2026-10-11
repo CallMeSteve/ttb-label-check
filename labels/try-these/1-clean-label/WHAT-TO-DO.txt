@@ -1,0 +1,4 @@
+A clean label that should pass.
+1. Open Check a label and click "Fill in the Old Tom example".
+2. Add front.png and back.png from this folder, then press Check this label.
+You should see: "Nothing for you to look at". Every row says Matches. The Government warning row still asks you to confirm by eye that the heading is bold, because a photo can't settle that.

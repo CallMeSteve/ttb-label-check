@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 HERE = Path(__file__).parent
 FONTS = HERE / "fonts"
-OUT = HERE / "out"
+OUT = HERE / "all-test-cases"
 W, H = 1200, 1600
 CREAM = (245, 238, 220)
 INK = (30, 24, 20)

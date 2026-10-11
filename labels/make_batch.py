@@ -13,7 +13,7 @@ import zipfile
 from pathlib import Path
 
 HERE = Path(__file__).parent
-OUT = HERE / "out"
+OUT = HERE / "all-test-cases"
 BATCH = HERE / "batch"
 COLUMNS = ["application_id", "images", "product_type", "source", "brand_name", "fanciful_name",
            "class_type", "alcohol_content", "net_contents"]

@@ -1,0 +1,4 @@
+The warning heading is printed as "Government Warning:" in capital and small letters. The rule says GOVERNMENT WARNING must be in capitals.
+1. Open Check a label and click "Fill in the Old Tom example".
+2. Add front.png and back.png from this folder, then press Check this label.
+You should see: "1 thing to look at". The Government warning row says "Doesn't follow the rule" and "The first two words must be in capital letters: GOVERNMENT WARNING." It shows a picture of the warning. The other rows say Matches.

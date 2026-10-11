@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
-OUT = ROOT / "labels" / "out"
+OUT = ROOT / "labels" / "all-test-cases"
 
 
 def expected_cases() -> dict:

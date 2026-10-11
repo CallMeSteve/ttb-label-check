@@ -1,0 +1,4 @@
+The brand is STONE'S THROW on the label and Stone's Throw on the application. Capitals don't matter on labels, so this is a match.
+1. Open Check a label. Type Stone's Throw as the brand name. Leave the other boxes empty.
+2. Add front.png and back.png from this folder, then press Check this label.
+You should see: "Nothing for you to look at". The Brand name row says Matches and explains that capitals don't matter except in the warning. Alcohol content and Net contents say Matches and "Application: not given", because they were checked against the rules only.

@@ -1,0 +1,4 @@
+The same clean label as folder 1, with a white glare patch added over the picture. This is a mild test. A real phone photo with heavy glare over the warning could do worse, and the tool would then say "Look at this" or that it couldn't read the picture.
+1. Open Check a label and click "Fill in the Old Tom example".
+2. Add front.png and back.png from this folder, then press Check this label.
+You should see: "Nothing for you to look at" and every row Matches, the same as folder 1.

@@ -6,11 +6,16 @@ Label Check compares an alcohol label to its application and shows you where to 
 
 Live app: https://treasurylabels.abdullah-sarwar.com (TODO(Abdullah): confirm it is live). Alternate link: TODO(Abdullah): the azurecontainerapps.io address.
 
-The sample files are in `labels/out/`. Three things to do, in this order:
+The sample pictures are in `labels/try-these/`. Each numbered folder holds a front and back picture and a `WHAT-TO-DO.txt` that says what to type and what you should see:
 
-1. Open **Check a label**, click **Fill in the Old Tom example**, then add `old_tom_clean_front.png` and `old_tom_clean_back.png` and press **Check this label**. Every row says Matches and the top line says "Nothing for you to look at". The warning row still asks you to confirm by eye that GOVERNMENT WARNING: is bold, because a photo can't settle that.
-2. Do it again with `warn_title_case_front.png` and `warn_title_case_back.png`. The warning row says the first two words must be in capital letters, and shows the cropped warning so you can see "Government Warning:" for yourself.
-3. Open **Check many labels** and drop `labels/batch_sample.zip` with no spreadsheet. Twelve applications are read, the ones with a problem are marked, and each has an Open link to the full result.
+1. `1-clean-label`: nothing to look at (apart from the by-eye check that the warning heading is bold).
+2. `2-brand-in-capitals`: STONE'S THROW on the label against Stone's Throw on the application is a match.
+3. `3-warning-not-in-capitals`: the warning row explains the capital letters and shows the cropped warning.
+4. `4-proof-does-not-match`: 45% with 80 proof is flagged.
+5. `5-bad-photo`: the clean label with glare added. It is a mild test, and the folder says so.
+6. `6-many-labels-at-once`: 12 labels in a zip, no spreadsheet.
+
+The full set of 25 rendered cases, with the degraded copies, lives in `labels/all-test-cases/`. Every case with its expected and actual result, misses included, is in `docs/results.md`. The bold-check limit is explained in "What I found in the regulations" and in `APPROACH.md`.
 
 A free host would sleep when idle. This one is meant to stay awake, so checks should take a few seconds from the first request.
 

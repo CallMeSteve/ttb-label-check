@@ -1,0 +1,4 @@
+A zip of 12 labels, with no spreadsheet.
+1. Open Check many labels. Drop batch_sample.zip from this folder on the box, then press Check these labels.
+2. Wait a minute. The page counts up from 0 of 12.
+You should see: "24 pictures, 12 applications". With no spreadsheet only the rule checks run, so labels with a broken rule (wrong proof, missing or reworded warning) are marked "to look at" and the rest say "Nothing to look at". Click Open on any row for the full result.

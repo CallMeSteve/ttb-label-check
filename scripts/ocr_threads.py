@@ -13,7 +13,7 @@ from app.pipeline import check_label
 from app.models import Application
 from app.ocr import warm_up
 warm_up()
-d = pathlib.Path('labels/out')
+d = pathlib.Path('labels/all-test-cases')
 files = [(n, (d / n).read_bytes()) for n in ('old_tom_clean_front.png', 'old_tom_clean_back.png')]
 t = time.perf_counter()
 for _ in range(8):

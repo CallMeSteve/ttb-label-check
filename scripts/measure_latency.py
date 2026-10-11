@@ -19,7 +19,7 @@ from pathlib import Path
 import httpx
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "labels" / "out"
+OUT = ROOT / "labels" / "all-test-cases"
 
 
 def pct(values: list[float], p: float) -> float:
@@ -57,6 +57,8 @@ def batch(client: httpx.Client, url: str, zip_path: Path, csv_path: Path | None)
     job = r.headers["location"].rsplit("/", 1)[1]
     while True:
         d = client.get(f"{url}/batch/{job}.json").json()
+        if d.get("missing"):
+            sys.exit("The batch vanished while polling. If the host runs more than one instance, limit it to one.")
         if d["finished"]:
             return time.perf_counter() - t, d["total"]
         time.sleep(1)

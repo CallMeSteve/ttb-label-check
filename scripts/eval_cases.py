@@ -12,7 +12,7 @@ sys.path.insert(0, str(ROOT))
 from app.models import Application  # noqa: E402
 from app.pipeline import check_label  # noqa: E402
 
-OUT = ROOT / "labels" / "out"
+OUT = ROOT / "labels" / "all-test-cases"
 
 
 def run_case(spec: dict):

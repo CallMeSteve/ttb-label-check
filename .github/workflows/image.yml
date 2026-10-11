@@ -42,7 +42,7 @@ jobs:
           for i in $(seq 1 60); do curl -sf localhost:8000/healthz && break; sleep 2; done
           curl -sf localhost:8000/check \
             -F product_type=spirits -F source=domestic -F "brand_name=OLD TOM DISTILLERY" \
-            -F images=@labels/out/old_tom_clean_front.png -F images=@labels/out/old_tom_clean_back.png \
+            -F images=@labels/all-test-cases/old_tom_clean_front.png -F images=@labels/all-test-cases/old_tom_clean_back.png \
             -o result.html
           grep -q "Nothing for you to look at" result.html
 
