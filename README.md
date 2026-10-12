@@ -98,6 +98,7 @@ I also ran five real approved labels from the Public COLA Registry (`labels/real
 - Matching the name and address against the application. The app only checks that the statement is there.
 - Separate-and-apart, second-warning, and same-field-of-vision checks.
 - A shared cache for the same back label across a batch.
+- One page showing every warning crop in a batch, so the bold check on 300 labels is one scroll instead of 300 clicks. It would show evidence only. I would not add Verified or Incorrect buttons: the decision is recorded in COLA, and marks held in memory would disappear when the batch is cleared.
 - Non-English labels.
 - User accounts and an audit log. Nothing is written to disk. Batch results sit in memory only and are cleared about 15 minutes after they were last opened, when the batch service goes idle.
 

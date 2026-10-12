@@ -5,6 +5,7 @@ Things I left out on purpose or noticed and did not build.
 - More real approved labels from the Public COLA Registry, including every panel of each record, and real phone photos of bottles.
 - Name and address matching against form item 8. The single-check form has no field for it.
 - A shared cache for a back label that repeats across a batch.
+- A warning sheet for a batch: every warning crop on one page, in batch order, each linked to its item, so the by-eye bold check is one scroll. View only, no marking.
 - Same-field-of-vision check for spirits (27 CFR 5.63(a)).
 - Separate-and-apart, second-warning, and size advisories for the warning.
 - Bold check by comparison: flag a warning whose heading measures the same stroke weight as the text after it. Both regular and both bold break the rule, so it needs no absolute bold threshold. Only worth shipping if it holds on real phone photos.
