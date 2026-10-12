@@ -117,5 +117,8 @@ button[disabled] { opacity: .7; cursor: wait; }
 code { background: var(--info-bg); padding: 0 .25rem; border-radius: 3px; }
 @media (max-width: 520px) {
   html { font-size: 18px; }
+  /* Phone: each term sits above its explanation instead of squeezing it into a narrow column. */
+  .plain th, .plain td { display: block; width: auto; white-space: normal; }
+  .plain th { border-bottom: 0; padding-bottom: 0; }
 }
 .scroll { overflow-x: auto; max-width: 100%; }
