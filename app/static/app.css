@@ -118,3 +118,4 @@ code { background: var(--info-bg); padding: 0 .25rem; border-radius: 3px; }
 @media (max-width: 520px) {
   html { font-size: 18px; }
 }
+.scroll { overflow-x: auto; max-width: 100%; }

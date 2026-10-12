@@ -4,15 +4,18 @@
 <h1>Check many labels</h1>
 <ul class="notes" id="notes">{% for n in data.notes %}<li>{{ n }}</li>{% endfor %}</ul>
 <p class="summary" id="summary" aria-live="polite">{{ data.done }} of {{ data.total }} done. {{ data.to_look }} to look at.</p>
+<p>"Nothing to look at" covers everything the app can read. The bold type of GOVERNMENT WARNING: is still checked by eye on every label: open a row to see the warning.</p>
 <p class="small">Results are held in memory only and never written to disk. They are cleared about 15 minutes after this page was last opened, so download the CSV to keep them.</p>
 <div class="actions">
   <label class="choice"><input type="checkbox" id="only-look"> Show only the ones to look at</label>
   <a class="button" id="csv-link" href="/batch/{{ job.id }}.csv">Download results (CSV)</a>
 </div>
 <noscript><p class="error">This page needs JavaScript to show progress. Reload it to see the latest.</p></noscript>
+<div class="scroll">
 <table class="queue" id="queue" data-job="{{ job.id }}">
   <thead><tr><th scope="col">Application</th><th scope="col">Pictures</th><th scope="col">Result</th><th scope="col"><span class="sr">Open</span></th></tr></thead>
   <tbody></tbody>
 </table>
+</div>
 <p><a class="button" href="/batch">Check another batch</a></p>
 {% endblock %}

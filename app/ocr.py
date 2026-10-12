@@ -10,6 +10,9 @@ from PIL import Image, ImageOps
 from .models import Box, Line
 
 MAX_EDGE = 1600
+# A tiny file can claim huge dimensions and take gigabytes to open. 60 million pixels covers a 48 MP phone photo.
+MAX_PIXELS = 60_000_000
+Image.MAX_IMAGE_PIXELS = MAX_PIXELS
 _engine = None
 _lock = threading.Lock()
 
@@ -34,6 +37,8 @@ def get_engine():
 
 def load_image(data: bytes) -> Image.Image:
     im = Image.open(io.BytesIO(data))
+    if im.width * im.height > MAX_PIXELS:
+        raise ValueError("picture too large to open")
     if im.format == "JPEG":
         im.draft("RGB", (MAX_EDGE * 2, MAX_EDGE * 2))
     im = ImageOps.exif_transpose(im)

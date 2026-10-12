@@ -43,6 +43,9 @@ class Line:
         return self.box.image_index
 
 
+FIELD_LIMIT = 200
+
+
 @dataclass
 class Application:
     product_type: str = "spirits"
@@ -52,6 +55,11 @@ class Application:
     class_type: str = ""
     alcohol_content: str = ""
     net_contents: str = ""
+
+    def __post_init__(self):
+        # No real entry is this long, and the matching work grows with the number of typed words.
+        for name in ("brand_name", "fanciful_name", "class_type", "alcohol_content", "net_contents"):
+            setattr(self, name, str(getattr(self, name))[:FIELD_LIMIT])
 
 
 @dataclass

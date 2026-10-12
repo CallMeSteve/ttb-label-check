@@ -282,7 +282,7 @@ def summary(item: Item) -> str:
 
 def _safe(cell: str) -> str:
     """Stop a spreadsheet program from running a cell that starts like a formula."""
-    return "'" + cell if cell[:1] in ("=", "+", "-", "@") else cell
+    return "'" + cell if cell[:1] in ("=", "+", "-", "@", "\t", "\r") else cell
 
 
 def export_csv(job: Job) -> str:
@@ -302,7 +302,7 @@ def export_csv(job: Job) -> str:
         row = [_safe(it.app_id), _safe("; ".join(it.filenames)), summary(it)]
         for name in items_order:
             r = by.get(name)
-            row += [r.status_text if r else "", r.reason if r else ""]
+            row += [_safe(r.status_text) if r else "", _safe(r.reason) if r else ""]
         w.writerow(row)
     return buf.getvalue()
 

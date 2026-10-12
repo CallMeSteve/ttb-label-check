@@ -70,8 +70,14 @@ async def read_pictures(uploads: list[UploadFile], limit: int | None = MAX_IMAGE
         if len(data) > MAX_IMAGE_BYTES:
             return [], f"That picture is too large ({len(data) // (1024 * 1024)} MB). Pictures under 15 MB work."
         try:
-            Image.open(io.BytesIO(data)).verify()
+            im = Image.open(io.BytesIO(data))
+            too_big = im.width * im.height > ocr.MAX_PIXELS
+            im.verify()
         except Exception:
+            too_big, im = False, None
+        if too_big:
+            return [], f"{u.filename} has too many pixels to open. Use a picture under 60 megapixels."
+        if im is None:
             return [], f"{u.filename} could not be opened as a picture. Use a JPG, PNG, or WEBP picture of the label."
         files.append((u.filename, data))
     return files, None
@@ -121,6 +127,25 @@ _HOP = {"connection", "keep-alive", "proxy-authenticate", "proxy-authorization",
         "transfer-encoding", "upgrade", "host"}
 
 
+# Browser safety settings, added to every response by the middleware below.
+SAFETY_HEADERS = {
+    "Content-Security-Policy": "default-src 'self'; img-src 'self' data: blob:; object-src 'none'; "
+                               "base-uri 'none'; form-action 'self'; frame-ancestors 'none'",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "no-referrer",
+    "Strict-Transport-Security": "max-age=31536000",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+}
+
+
+@app.middleware("http")
+async def safety_headers(request: Request, call_next):
+    response = await call_next(request)
+    for k, v in SAFETY_HEADERS.items():
+        response.headers.setdefault(k, v)
+    return response
+
+
 @app.middleware("http")
 async def forward_batch(request: Request, call_next):
     base = os.environ.get("BATCH_BACKEND_URL", "").rstrip("/")
@@ -129,8 +154,10 @@ async def forward_batch(request: Request, call_next):
     is_page = path == "/batch" and request.method == "GET"
     if not base or is_page or not (path == "/batch" or path.startswith("/batch/")):
         return await call_next(request)
+    if ".." in path or "\\" in path:
+        return PlainTextResponse("Not found.", status_code=404)
     target = base + ("/health" if path == "/batch/warm" else path)
-    if request.url.query:
+    if request.url.query and path != "/batch/warm":
         target += "?" + request.url.query
     headers = {k: v for k, v in request.headers.items() if k.lower() not in _HOP}
     try:
@@ -254,8 +281,6 @@ def help_page(request: Request):
 
 @app.get("/health")
 @app.get("/healthz")
-def healthz(run: int = 0):
+def healthz():
     seconds = state["warm_seconds"]
-    if run:
-        seconds = ocr.warm_up()
     return {"ok": seconds is not None, "ocr_warm_up_seconds": seconds}

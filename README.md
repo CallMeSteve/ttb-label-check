@@ -4,6 +4,12 @@ Label Check compares an alcohol label to its application and shows you where to 
 
 Built by [Abdullah Sarwar](https://abdullah-sarwar.com/).
 
+Three things in the regulations shaped it more than the interviews did:
+
+- TTB's application form has no box for alcohol content, net contents, or class and type. So the app checks those against the rules on every label, and against the application only when you type what it says.
+- Capital letters don't matter anywhere on a label except the first two words of the warning. STONE'S THROW and Stone's Throw are a match by rule, not by a similarity score.
+- The warning heading must be bold and the rest of the warning must not be. A text reader can't settle that from a photo, so the app shows the warning and a person confirms the type weight.
+
 ## Try it
 
 Live app: https://treasurylabels.abdullah-sarwar.com.
@@ -38,7 +44,7 @@ I started with the application form instead of the label. TTB's current Form 510
 
 Capital letters don't matter anywhere on a label except the first two words of the warning. TTB lists changes of case and punctuation as allowable revisions for every beverage type, and the spirits and beer rules say mandatory information may be in capitals, lower case, or mixed. Wine has no such sentence, so for wine the app cites the allowable revision. That is why STONE'S THROW and Stone's Throw are a match by rule, with a note saying so, and not a score above some threshold.
 
-The warning has a rule that gets less attention: the first two words must be bold, and the remainder may not be. A reading tool can't tell bold from regular reliably in a photo, so the warning row always shows the crop and asks the agent to confirm it.
+The warning has a rule that gets less attention: the first two words must be bold, and the remainder may not be. A reading tool can't tell bold from regular reliably in a photo, so the warning row always shows the crop and asks the agent to confirm it. The next step I would test: a compliant label always has a heading heavier than the text after it, so if the two measure the same weight the label breaks the rule whether both are regular or both are bold. That comparison happens inside one photo, so blur affects both sides alike, and it could only add a warning, never clear one.
 
 Beer must show fluid ounces. A beer label with only "355 mL" breaks the rule, while a spirits label must show metric. And 700 mL is a legal spirits size, so a checker with one fill list for everything would flag a valid bottle.
 
@@ -88,7 +94,7 @@ I also ran five real approved labels from the Public COLA Registry (`labels/real
 - Judging whether a brand name is misleading (27 CFR 5.64).
 - Allergen, sulfite, aspartame and neutral-spirits statements.
 - Type size in millimeters. TTB doesn't routinely measure it either.
-- Bold detection. See "What I found".
+- Bold detection. See "What I found" for the comparison I would test next.
 - Matching the name and address against the application. The app only checks that the statement is there.
 - Separate-and-apart, second-warning, and same-field-of-vision checks.
 - A shared cache for the same back label across a batch.
@@ -113,13 +119,24 @@ pytest
 
 To regenerate the labels: `python labels/make_labels.py`, and the batch files: `python labels/make_batch.py`.
 
-The same image runs on Azure App Service for Containers or Azure Container Apps. On Azure it stays one copy that does everything. `scripts/deploy_azure.ps1` is written for that, but it has not been run end to end yet: the Azure subscription's Container Apps service was still being activated when I submitted. For App Service: `az webapp create --resource-group <group> --plan <plan> --name <app> --deployment-container-image-name ghcr.io/callmesteve/ttb-label-check:latest`, with the setting `WEBSITES_PORT=8000`.
+The same image is built to run on Azure App Service for Containers or Azure Container Apps. On Azure it stays one copy that does everything. `scripts/deploy_azure.ps1` is written for that, but it has not been run end to end yet: the Azure subscription's Container Apps service was still being activated when I submitted. For App Service: `az webapp create --resource-group <group> --plan <plan> --name <app> --deployment-container-image-name ghcr.io/callmesteve/ttb-label-check:latest`, with the setting `WEBSITES_PORT=8000`.
 
 Network use: the app talks to one address, the one you open it from. If your network lets you load the page, every feature works, because there is nothing else for it to reach. The text reading runs inside the app. A test in the repo runs a full check with outbound network access blocked.
 
 Versions: Python 3.12, rapidocr 3.10.0, onnxruntime 1.31.0. Models: whatever RapidOCR 3.10.0 installs by default (PP-OCRv6 small detection and recognition).
 
 Built on: Google Cloud Run in us-central1, as two services from one image, each 4 vCPU and 8 GiB. The front service handles single checks. The batch service runs as a single instance because batch jobs live in memory. The Azure Container Apps script, `scripts/deploy_azure.ps1`, deploys the same image as one copy (not yet run end to end; see above).
+
+## Security
+
+There is no login, by design for a prototype, and nothing is stored, so the work went into making sure an anonymous visitor can't break it, run up its bill, or use it against anything else. A review on 2026-10-12 covered the code, its libraries, the cloud setup and the repository, and each finding was checked a second time before it counted. No high or medium issue was left. What it changed:
+
+- Pictures over 60 megapixels are refused before they are opened, so a small file that claims huge dimensions can't exhaust memory. Typed values are capped at 200 characters.
+- Every page sends a content security policy (scripts, styles and requests only from this site, no framing) and the usual nosniff, referrer and HSTS settings. Pages are escaped templates with no inline script.
+- The batch pass-through only forwards batch paths, refuses `..`, and its warm-up call carries no parameters. `/health` reports status and never runs the reader.
+- Spreadsheet exports neutralise every cell that starts like a formula.
+- Both services run as their own service account with no project roles. Each is capped at one instance, and a billing budget alerts at 50, 90 and 100 percent of $20 a month.
+- Batch links use random 64-bit ids, zip entries are read in memory by base name only, and the container runs as a non-root user. Dependencies are pinned, `pip-audit` was clean, and secret scanning, push protection and Dependabot are on for the repository.
 
 ## Questions I'd ask next
 

@@ -95,3 +95,11 @@ def test_big_photos_are_shrunk_before_upload_and_keep_their_names():
     from pathlib import Path
     js = (Path(__file__).resolve().parents[1] / "app" / "static" / "app.js").read_text(encoding="utf-8")
     assert "new File([b], f.name" in js and "UPLOAD_LIMIT" in js
+
+
+def test_dot_dot_paths_and_warm_queries_are_not_passed_on(forwarded):
+    seen, client = forwarded
+    assert client.get("/batch/%2e%2e/health").status_code == 404
+    assert seen == []
+    client.get("/batch/warm?run=1")
+    assert seen[0].url.path == "/health" and seen[0].url.query == b""

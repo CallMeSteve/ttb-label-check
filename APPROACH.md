@@ -4,7 +4,13 @@
 
 TTB agents check a label against an application by eye, using a printed checklist. They need a tool that does the checklist in about five seconds, shows its evidence, works for one label or three hundred, and runs where the network blocks outside services. It has to be usable by someone who has never used it, and it must not make the decision for them.
 
-## Requirements and where each is met
+## What the interviews got wrong
+
+- Dave's STONE'S THROW example is not a judgment call. The rules allow any case on a label, so it is a match by rule and the app says which rule.
+- Jenny's "exact" is exact for the wording and for the capitals of the first two words only. The rest of the warning may be in any case, and the bold rule runs both ways: heading bold, the rest not.
+- Sarah's "ABV is correct" has nothing to be correct against. The current form has no alcohol content box, so the app checks the label's number against the rules and against the application only when someone types it.
+
+## Where each interview point landed
 
 | Need | Where it is met |
 |---|---|
@@ -20,7 +26,7 @@ TTB agents check a label against an application by eye, using a printed checklis
 | Bad angles and glare | EXIF rotation and the reader's angle classifier. Low confidence moves a row to "Look at this" and never to "Matches" |
 | Standalone, no COLA | No integration |
 | Little stored data | Nothing written to disk. Pictures are dropped after the crops are cut. Batch results stay in memory until the batch service goes idle, about 15 minutes after the last visit |
-| Azure shop | The same container runs on Azure Container Apps or App Service |
+| Azure shop | The same container is built for Azure Container Apps or App Service; the deploy script has not been run end to end |
 
 ## Where the AI is, and where it isn't
 
