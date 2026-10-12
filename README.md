@@ -75,7 +75,7 @@ Measured with `scripts/measure_latency.py`, which writes `docs/latency.md`.
 | Where | Single check (front and back), p50 / p95 / max | Batch |
 |---|---|---|
 | My Windows PC, 32 logical cores, 2026-10-11 | 1.22 s / 1.31 s / 1.89 s (75 checks) | 150 applications (300 pictures) in 165 s |
-| Public URL (Google Cloud Run, 4 vCPU), 2026-10-11 | 2.20 s / 2.49 s / 2.49 s (10 checks) | 150 applications (300 pictures) in 266 s, 4 batch workers |
+| Public URL (Google Cloud Run, 4 vCPU), 2026-10-12 | 1.17 s / 1.31 s / 1.44 s (1,000 checks: all 25 test cases, 40 times each) | 150 applications (300 pictures) in 266 s, 4 batch workers (2026-10-11) |
 
 On one thread a two-picture check takes about 2.5 s on my PC, and about 1.8 s on two threads. A small cloud container will land closer to the one and two thread numbers. `OCR_THREADS` sets the ONNX thread count and `OCR_DET_MAX_SIDE=1280` shrinks the text detection size if a host is slow.
 
