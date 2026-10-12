@@ -2,6 +2,8 @@
 
 Label Check compares an alcohol label to its application and shows you where to look.
 
+Built by [Abdullah Sarwar](https://abdullah-sarwar.com/).
+
 ## Try it
 
 Live app: https://treasurylabels.abdullah-sarwar.com.
